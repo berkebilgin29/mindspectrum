@@ -2,12 +2,12 @@
 
 import { DIFFERENTIAL_BRANCHES } from "@/data/differentialQuestions";
 import { A11yBar } from "@/components/A11yBar";
-import { VisualBattery } from "@/components/VisualBattery";
 import {
   applyBaseAnswer,
   applyDiffAnswer,
   applySkip,
   enterDiff,
+  finishVisual,
   goBack,
 } from "@/lib/flow";
 import {
@@ -42,8 +42,8 @@ function OptionList({
   onSkip,
   onBack,
   backLabel = "Geri",
-  confirmLabel = "Kaydet ve devam",
   skipLabel = "Bu maddeyi atla",
+  answerLabel = "Yanıt seçenekleri",
 }: {
   questionId: string;
   options: string[];
@@ -53,13 +53,9 @@ function OptionList({
   onSkip?: () => void;
   onBack: () => void;
   backLabel?: string;
-  confirmLabel?: string;
   skipLabel?: string;
+  answerLabel?: string;
 }) {
-  const [picked, setPicked] = useState<number | null>(
-    selected !== undefined && selected >= 0 ? selected : null,
-  );
-
   useEffect(() => {
     function onKey(event: KeyboardEvent) {
       const target = event.target as HTMLElement | null;
@@ -79,23 +75,23 @@ function OptionList({
         e: 4,
       };
       const index = map[event.key.toLowerCase()];
-      if (index !== undefined && index < options.length) setPicked(index);
+      if (index !== undefined && index < options.length) onConfirm(index);
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [options.length]);
+  }, [onConfirm, options.length]);
 
   return (
     <>
-      <div className="opts" role="radiogroup" aria-label="Yanıt seçenekleri">
+      <div className="opts" role="radiogroup" aria-label={answerLabel}>
         {options.map((text, index) => (
           <button
             key={`${questionId}-${index}`}
             className="opt"
             type="button"
             role="radio"
-            aria-checked={picked === index}
-            onClick={() => setPicked(index)}
+            aria-checked={selected === index}
+            onClick={() => onConfirm(index)}
           >
             <span className="mark">{LETTERS[index]}</span>
             <span>{text}</span>
@@ -106,23 +102,11 @@ function OptionList({
         <button className="btn btn-ghost" type="button" onClick={onBack}>
           {backLabel}
         </button>
-        <div className="intake-actions" style={{ marginTop: 0 }}>
-          {skippable && onSkip ? (
-            <button className="btn btn-ghost" type="button" onClick={onSkip}>
-              {skipLabel}
-            </button>
-          ) : null}
-          <button
-            className="btn"
-            type="button"
-            disabled={picked === null}
-            onClick={() => {
-              if (picked !== null) onConfirm(picked);
-            }}
-          >
-            {confirmLabel}
+        {skippable && onSkip ? (
+          <button className="btn btn-ghost" type="button" onClick={onSkip}>
+            {skipLabel}
           </button>
-        </div>
+        ) : null}
       </div>
     </>
   );
@@ -203,6 +187,11 @@ export function ScanApp({ lang = "tr" }: { lang?: Lang }) {
     (answeredCount(state) / Math.max(1, totalQuestionCount(state))) * 100,
   );
 
+  useEffect(() => {
+    if (state.phase !== "visual") return;
+    persist(finishVisual(state));
+  }, [state.phase, state, persist]);
+
   if (state.phase === "intro") {
     return (
       <section className="sheet bridge">
@@ -265,20 +254,6 @@ export function ScanApp({ lang = "tr" }: { lang?: Lang }) {
           {d.scan_resume}
         </button>
       </section>
-    );
-  }
-
-  if (state.phase === "visual") {
-    return (
-      <>
-        <A11yBar speakText={d.vis_lede} />
-        <VisualBattery
-          state={state}
-          onChange={persist}
-          onBack={() => persist(goBack(state))}
-          lang={lang}
-        />
-      </>
     );
   }
 
@@ -354,8 +329,8 @@ export function ScanApp({ lang = "tr" }: { lang?: Lang }) {
           onSkip={() => persist(applySkip(state))}
           onBack={() => persist(goBack(state))}
           backLabel={d.scan_back}
-          confirmLabel={lang === "en" ? "Save & continue" : "Kaydet ve devam"}
           skipLabel={d.scan_skip}
+          answerLabel={d.scan_answer_label}
         />
         <button className="linkish" type="button" onClick={() => setPaused(true)}>
           {d.scan_pause}

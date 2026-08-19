@@ -40,6 +40,8 @@ function ChildPick({
   onConfirm,
   onSkip,
   onBack,
+  backLabel = "Geri",
+  skipLabel = "Atla",
 }: {
   questionId: string;
   options: string[];
@@ -48,10 +50,9 @@ function ChildPick({
   onConfirm: (index: number) => void;
   onSkip?: () => void;
   onBack: () => void;
+  backLabel?: string;
+  skipLabel?: string;
 }) {
-  const [picked, setPicked] = useState<number | null>(
-    selected !== undefined && selected >= 0 ? selected : null,
-  );
   return (
     <>
       <div className="opts" role="radiogroup">
@@ -61,8 +62,8 @@ function ChildPick({
             className="opt"
             type="button"
             role="radio"
-            aria-checked={picked === index}
-            onClick={() => setPicked(index)}
+            aria-checked={selected === index}
+            onClick={() => onConfirm(index)}
           >
             <span className="mark">{LETTERS[index]}</span>
             <span>{text}</span>
@@ -71,23 +72,13 @@ function ChildPick({
       </div>
       <div className="scan-nav">
         <button className="btn btn-ghost" type="button" onClick={onBack}>
-          Geri
+          {backLabel}
         </button>
         {skippable && onSkip ? (
           <button className="btn btn-ghost" type="button" onClick={onSkip}>
-            Atla
+            {skipLabel}
           </button>
         ) : null}
-        <button
-          className="btn"
-          type="button"
-          disabled={picked === null}
-          onClick={() => {
-            if (picked !== null) onConfirm(picked);
-          }}
-        >
-          Kaydet ve devam
-        </button>
       </div>
     </>
   );

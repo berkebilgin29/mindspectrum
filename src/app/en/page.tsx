@@ -60,9 +60,9 @@ export default function EnHomePage() {
           <div>
             <h2>Two stages, one session.</h2>
             <p className="lede" style={{ marginTop: 12 }}>
-              36 written items derived from clinical scale language; followed by
-              short visual attention, go/no-go, sensory texture and energy-compass
-              tasks. 'Not sure' options and skippable trauma items included.
+              36 written items derived from clinical scale language.
+              &apos;Not sure&apos; options and skippable trauma items included.
+              Tap an option to move to the next question.
             </p>
           </div>
           <div>

@@ -17,7 +17,7 @@ const FAQ = [
   },
   {
     q: "Ne kadar sürer?",
-    a: "Yazılı çatı yaklaşık 36 maddedir; görsel görevlerle 15–25 dakika. Çocuk ebeveyn formu daha kısadır.",
+    a: "Yazılı çatı yaklaşık 36 maddedir; çoğu kişi 12–20 dakikada bitirir. Çocuk ebeveyn formu daha kısadır.",
   },
   {
     q: "Çocuklar için form var mı?",
@@ -25,7 +25,7 @@ const FAQ = [
   },
   {
     q: "Görsel testler nedir?",
-    a: "Yetişkin taramada kısa dikkat süzgeci, dur-git, duyusal doku ve enerji haritası vardır. Performans tanısı değildir; yazılı skorlara ek ipucudur. Hareketi azaltırsanız atlanır.",
+    a: "Artık yok. Tarama yalnızca yazılı maddelerden oluşur; şıka tıklayınca otomatik ilerler.",
   },
   {
     q: "Yarıda bırakırsam ne olur?",

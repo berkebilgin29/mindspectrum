@@ -33,7 +33,7 @@ const BRANCH_RULES: { id: string; dims: DimensionId[] }[] = [
 
 const CHILD_SKIP_BRANCHES = new Set(["adhd_vs_bipolar", "bipolar_vs_bpd"]);
 
-export const VISUAL_COUNT = 4;
+export const VISUAL_COUNT = 0;
 
 export function emptyScores(): Scores {
   return {

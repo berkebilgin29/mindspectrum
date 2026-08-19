@@ -60,9 +60,9 @@ export default function HomePage() {
           <div>
             <h2>İki aşama, tek oturum.</h2>
             <p className="lede" style={{ marginTop: 12 }}>
-              Klinik ölçeklerin dilinden türetilmiş 36 yazılı madde; ardından
-              kısa görsel dikkat, dur-git, duyusal doku ve enerji haritası.
+              Klinik ölçeklerin dilinden türetilmiş 36 yazılı madde.
               Emin değilim seçeneği ve travma maddelerinde atlama vardır.
+              Şıka tıklayınca bir sonraki soruya geçilir.
             </p>
           </div>
           <div>

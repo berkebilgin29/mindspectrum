@@ -47,9 +47,6 @@ export function scoresFromAnswers(state: ScanState, answers: AnswerMap): {
 function afterBaseComplete(state: ScanState, answers: AnswerMap): ScanState {
   const { scores, subtypeTags } = scoresFromAnswers(state, answers);
   const next = { ...state, answers, scores, subtypeTags };
-  if (state.audience === "adult") {
-    return { ...next, phase: "visual", visualIndex: 0 };
-  }
   const branches = selectBranches(next);
   return {
     ...next,
@@ -167,17 +164,7 @@ export function applyDiffAnswer(
 export function goBack(state: ScanState): ScanState {
   const bank = questionBank(state.audience);
 
-  if (state.phase === "visual") {
-    if (state.visualIndex === 0) {
-      return { ...state, phase: "base", baseIndex: bank.length - 1 };
-    }
-    return { ...state, visualIndex: state.visualIndex - 1 };
-  }
-
   if (state.phase === "bridge") {
-    if (state.audience === "adult") {
-      return { ...state, phase: "visual", visualIndex: 3 };
-    }
     return { ...state, phase: "base", baseIndex: bank.length - 1 };
   }
 

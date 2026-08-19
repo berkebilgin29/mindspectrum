@@ -259,7 +259,7 @@ export const TR: Dict = {
   home_children_link: "Çocuk tarama",
   home_how_h2: "İki aşama, tek oturum.",
   home_how_lede:
-    "Klinik ölçeklerin dilinden türetilmiş 36 yazılı madde; ardından kısa görsel dikkat, dur-git, duyusal doku ve enerji haritası. Emin değilim seçeneği ve travma maddelerinde atlama vardır.",
+    "Klinik ölçeklerin dilinden türetilmiş 36 yazılı madde. Emin değilim seçeneği ve travma maddelerinde atlama vardır. Şıka tıklayınca bir sonraki soruya geçilir.",
   home_step1_title: "1. Çatı tarama",
   home_step1_body:
     "DEHB, OKB, depresyon, yaygın anksiyete, bipolar spektrum, otizm / duyusal profil, sosyal anksiyete, travma ve duygusal düzensizlik — boyut başına daha dolu maddeler.",
@@ -282,7 +282,7 @@ export const TR: Dict = {
   gate_kicker: "Kapı · yetişkin tarama",
   gate_h1: "Bu bir tanı görüşmesi değil.",
   gate_lede:
-    "36 yazılı madde, 4 kısa görsel görev ve yalnızca örtüşmede ayırıcı dallar. Cevaplar bu cihazda kalır.",
+    "36 yazılı madde ve yalnızca örtüşmede ayırıcı dallar. Cevaplar bu cihazda kalır. Şıka tıklayınca devam edilir.",
   gate_check_adult: "18 yaşından büyüğüm.",
   gate_check_crisis:
     "Şu an aktif kriz, intihar düşüncesi veya kendime/başkasına zarar verme niyetinde değilim.",
@@ -428,9 +428,9 @@ export const TR: Dict = {
   faq_items: [
     { q: "Bu bir tanı mı?", a: "Hayır. MindSpectrum eğilim ve örtüşme haritası üretir. Tanıyı yalnızca yetkili bir klinisyen koyabilir." },
     { q: "Cevaplarım nereye gidiyor?", a: "Sunucuya gitmiyor. Bu tarayıcının yerel belleğinde kalır. İstediğiniz zaman gizlilik sayfasından silebilirsiniz." },
-    { q: "Ne kadar sürer?", a: "Yazılı çatı yaklaşık 36 maddedir; görsel görevlerle 15–25 dakika. Çocuk ebeveyn formu daha kısadır." },
+    { q: "Ne kadar sürer?", a: "Yazılı çatı yaklaşık 36 maddedir; çoğu kişi 12–20 dakikada bitirir. Çocuk ebeveyn formu daha kısadır." },
     { q: "Çocuklar için form var mı?", a: "Evet. /cocuklar adresinde 6–17 yaş ebeveyn formu vardır. Çocuk tek başına doldurmaz; tanı veya okul raporu değildir." },
-    { q: "Görsel testler nedir?", a: "Yetişkin taramada kısa dikkat süzgeci, dur-git, duyusal doku ve enerji haritası vardır. Performans tanısı değildir." },
+    { q: "Görsel testler nedir?", a: "Artık yok. Tarama yalnızca yazılı maddelerden oluşur; şıka tıklayınca otomatik ilerler." },
     { q: "Yarıda bırakırsam ne olur?", a: "Aynı tarayıcıda kaldığınız yerden devam edebilirsiniz. Başka bir cihaza aktarılmaz." },
     { q: "Krizdeysem kullanmalı mıyım?", a: "Hayır. Acil durumda 112'yi arayın. Kriz kaynakları sayfasına bakın." },
     { q: "Ölçekler resmi mi?", a: "Hayır. Soru dili ASRS-v1.1, PHQ-9, GAD-7, OCI-R, MDQ, AQ-10, LSAS, PCL-5 ve benzeri envanterlerin boyutlarından türetilmiştir." },
@@ -517,7 +517,7 @@ export const EN: Dict = {
   home_children_link: "Child screening",
   home_how_h2: "Two stages, one session.",
   home_how_lede:
-    "36 written items derived from clinical scale language, followed by short visual attention, go/no-go, sensory texture and energy-compass tasks. 'Not sure' options and skippable trauma items are included.",
+    "36 written items derived from clinical scale language. 'Not sure' options and skippable trauma items are included. Tap an option to continue.",
   home_step1_title: "1. Roof screen",
   home_step1_body:
     "ADHD, OCD, depression, generalised anxiety, bipolar spectrum, autism/sensory profile, social anxiety, trauma and emotional dysregulation — with richer items per dimension.",
@@ -540,7 +540,7 @@ export const EN: Dict = {
   gate_kicker: "Gate · adult screening",
   gate_h1: "This is not a clinical interview.",
   gate_lede:
-    "36 written items, 4 short visual tasks, and differential branches only where scores overlap. Your answers stay on this device.",
+    "36 written items and differential branches only where scores overlap. Your answers stay on this device. Tap an option to continue.",
   gate_check_adult: "I am 18 years of age or older.",
   gate_check_crisis:
     "I am not currently in active crisis, having suicidal thoughts, or intending harm to myself or others.",
@@ -686,9 +686,9 @@ export const EN: Dict = {
   faq_items: [
     { q: "Is this a diagnosis?", a: "No. MindSpectrum produces a tendency and overlap map. Only a licensed clinician can diagnose." },
     { q: "Where do my answers go?", a: "They don't go anywhere. They stay in this browser's local storage. You can delete them any time from the privacy page." },
-    { q: "How long does it take?", a: "The written roof screen is about 36 items; with visual tasks, 15–25 minutes. The child parent form is shorter." },
+    { q: "How long does it take?", a: "The written roof screen is about 36 items; most people finish in 12–20 minutes. The child parent form is shorter." },
     { q: "Is there a form for children?", a: "Yes. The parent form for ages 6–17 is at /en/children. Children should not complete it alone; it is not a diagnosis or school report." },
-    { q: "What are the visual tasks?", a: "The adult screening includes a brief attention filter, go/no-go, sensory texture rating, and energy compass. Not a performance diagnosis — additional context for written scores." },
+    { q: "What are the visual tasks?", a: "There aren't any anymore. The screening is text-only; tapping an option advances automatically." },
     { q: "What if I leave halfway through?", a: "You can continue from where you left off in the same browser. It doesn't transfer to another device." },
     { q: "Should I use this if I'm in crisis?", a: "No. In an emergency call your local emergency number. See the crisis resources page." },
     { q: "Are the scales official?", a: "No. The question language is derived from dimensions of ASRS-v1.1, PHQ-9, GAD-7, OCI-R, MDQ, AQ-10, LSAS, PCL-5 and similar inventories. Licensed full forms are not administered." },
