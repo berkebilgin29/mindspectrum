@@ -2,8 +2,8 @@ import { buildResult, emptyScores } from "@/lib/engine";
 import { emptyVisual } from "@/lib/visual";
 import type { ScanState } from "@/lib/types";
 
-const SCAN_KEY = "mindspectrum-scan-v1";
-const RESULT_KEY = "mindspectrum-result-v1";
+const SCAN_KEY = "mindspectrum-scan-v2";
+const RESULT_KEY = "mindspectrum-result-v2";
 
 export const EMPTY_SCAN: ScanState = {
   phase: "intro",
@@ -19,6 +19,9 @@ export const EMPTY_SCAN: ScanState = {
   visualIndex: 0,
   visual: emptyVisual(),
   audience: "adult",
+  adaptiveQueue: [],
+  crossMatchApplied: [],
+  axisScores: {},
 };
 
 type Listener = () => void;
@@ -72,6 +75,9 @@ function parseScan(raw: string | null): ScanState {
       visualIndex: parsed.visualIndex ?? 0,
       visual: parsed.visual ?? emptyVisual(),
       audience: parsed.audience ?? "adult",
+      adaptiveQueue: parsed.adaptiveQueue ?? [],
+      crossMatchApplied: parsed.crossMatchApplied ?? [],
+      axisScores: parsed.axisScores ?? {},
     };
   } catch {
     return EMPTY_SCAN;

@@ -1,6 +1,5 @@
 "use client";
 
-import { DIFFERENTIAL_BRANCHES } from "@/data/differentialQuestions";
 import { A11yBar } from "@/components/A11yBar";
 import {
   applyBaseAnswer,
@@ -13,10 +12,13 @@ import {
 import {
   answeredCount,
   createInitialState,
+  currentAdaptiveQuestion,
   currentDiffContext,
   questionBank,
   totalQuestionCount,
 } from "@/lib/engine";
+import { buildInitialAdaptiveQueue, usesAdaptiveFlow } from "@/lib/adaptive/selector";
+import { resolveBranch } from "@/lib/adaptive/stage2";
 import { DICTS, type Lang } from "@/lib/i18n/dict";
 import { effectiveOptions } from "@/lib/options";
 import {
@@ -56,6 +58,28 @@ function OptionList({
   skipLabel?: string;
   answerLabel?: string;
 }) {
+  const [flash, setFlash] = useState<number | null>(null);
+  const [locking, setLocking] = useState(false);
+
+  const pick = useCallback(
+    (index: number) => {
+      if (locking) return;
+      setLocking(true);
+      setFlash(index);
+      window.setTimeout(() => {
+        onConfirm(index);
+        setFlash(null);
+        setLocking(false);
+      }, 200);
+    },
+    [locking, onConfirm],
+  );
+
+  useEffect(() => {
+    setFlash(null);
+    setLocking(false);
+  }, [questionId]);
+
   useEffect(() => {
     function onKey(event: KeyboardEvent) {
       const target = event.target as HTMLElement | null;
@@ -75,11 +99,11 @@ function OptionList({
         e: 4,
       };
       const index = map[event.key.toLowerCase()];
-      if (index !== undefined && index < options.length) onConfirm(index);
+      if (index !== undefined && index < options.length) pick(index);
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [onConfirm, options.length]);
+  }, [options.length, pick]);
 
   return (
     <>
@@ -87,11 +111,12 @@ function OptionList({
         {options.map((text, index) => (
           <button
             key={`${questionId}-${index}`}
-            className="opt"
+            className={`opt${flash === index ? " opt-chosen" : ""}`}
             type="button"
             role="radio"
-            aria-checked={selected === index}
-            onClick={() => onConfirm(index)}
+            aria-checked={flash === index || selected === index}
+            disabled={locking}
+            onClick={() => pick(index)}
           >
             <span className="mark">{LETTERS[index]}</span>
             <span>{text}</span>
@@ -141,6 +166,23 @@ export function ScanApp({ lang = "tr" }: { lang?: Lang }) {
   );
 
   const current = useMemo(() => {
+    if (state.phase === "base" && usesAdaptiveFlow(state)) {
+      const question = currentAdaptiveQuestion(state, lang);
+      if (!question) return null;
+      return {
+        category: question.category,
+        question: question.question,
+        subtitle: question.subtitle ?? "",
+        options: question.options.map((option) => option.text),
+        selected: state.answers[question.id],
+        stageLabel:
+          lang === "en"
+            ? "Stage 1 · Adaptive screening"
+            : "1. Aşama · Adaptif senaryo taraması",
+        questionId: question.id,
+        skippable: question.skippable,
+      };
+    }
     const bank = questionBank(state.audience, lang);
     if (state.phase === "base") {
       const question = bank[state.baseIndex];
@@ -173,7 +215,7 @@ export function ScanApp({ lang = "tr" }: { lang?: Lang }) {
       };
     }
     return null;
-  }, [state]);
+  }, [state, lang]);
 
   const confirm = useCallback(
     (option: number) => {
@@ -229,13 +271,16 @@ export function ScanApp({ lang = "tr" }: { lang?: Lang }) {
             className="btn"
             type="button"
             disabled={!ageOk || !crisisOk}
-            onClick={() =>
+            onClick={() => {
+              const startedAt = new Date().toISOString();
               persist({
                 ...createInitialState("adult"),
                 phase: "base",
-                startedAt: new Date().toISOString(),
-              })
-            }
+                startedAt,
+                adaptiveQueue:
+                  lang === "tr" ? buildInitialAdaptiveQueue(startedAt) : [],
+              });
+            }}
           >
             {d.gate_begin}
           </button>
@@ -259,7 +304,7 @@ export function ScanApp({ lang = "tr" }: { lang?: Lang }) {
 
   if (state.phase === "bridge") {
     const names = state.branches
-      .map((id) => DIFFERENTIAL_BRANCHES[id]?.title)
+      .map((id) => resolveBranch(id)?.title)
       .filter(Boolean);
     return (
       <section className="sheet bridge">

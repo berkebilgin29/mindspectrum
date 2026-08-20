@@ -1,5 +1,17 @@
 import { DIFFERENTIAL_BRANCHES } from "@/data/differentialQuestions";
 import {
+  detectNewCrossMatches,
+  getAdaptiveQuestion,
+  scoresFromAdaptiveAnswers,
+} from "@/lib/adaptive/scoring";
+import {
+  pickNextQuestionIds,
+  shouldCompleteAdaptive,
+  usesAdaptiveFlow,
+  validateQueue,
+} from "@/lib/adaptive/selector";
+import { resolveBranch } from "@/lib/adaptive/stage2";
+import {
   addWeights,
   emptyScores,
   questionBank,
@@ -9,7 +21,7 @@ import { effectiveOptions, SKIP_INDEX } from "@/lib/options";
 import { addVisualToScores } from "@/lib/visual";
 import type { AnswerMap, ScanState, Scores } from "@/lib/types";
 
-export function scoresFromAnswers(state: ScanState, answers: AnswerMap): {
+function scoresFromLegacyAnswers(state: ScanState, answers: AnswerMap): {
   scores: Scores;
   subtypeTags: string[];
 } {
@@ -44,9 +56,60 @@ export function scoresFromAnswers(state: ScanState, answers: AnswerMap): {
   return { scores, subtypeTags };
 }
 
+export function scoresFromAnswers(state: ScanState, answers: AnswerMap): {
+  scores: Scores;
+  subtypeTags: string[];
+  axisScores: Record<string, number>;
+  crossMatchApplied: string[];
+} {
+  if (usesAdaptiveFlow(state)) {
+    const newCross = detectNewCrossMatches(answers, state.crossMatchApplied);
+    const crossMatchApplied = [
+      ...new Set([...state.crossMatchApplied, ...newCross]),
+    ];
+    const { scores, axisScores } = scoresFromAdaptiveAnswers(
+      answers,
+      crossMatchApplied,
+    );
+
+    let merged = { ...scores };
+    const subtypeTags: string[] = [];
+
+    for (const branchId of state.branches) {
+      const branch = resolveBranch(branchId);
+      if (!branch) continue;
+      for (const question of branch.questions) {
+        const index = answers[question.id];
+        if (index === undefined) continue;
+        const option = question.options[index];
+        if (!option) continue;
+        merged = addWeights(merged, option.points);
+        if (option.subTypeTag) subtypeTags.push(option.subTypeTag);
+      }
+    }
+
+    return { scores: merged, subtypeTags, axisScores, crossMatchApplied };
+  }
+
+  const legacy = scoresFromLegacyAnswers(state, answers);
+  return {
+    ...legacy,
+    axisScores: {},
+    crossMatchApplied: [],
+  };
+}
+
 function afterBaseComplete(state: ScanState, answers: AnswerMap): ScanState {
-  const { scores, subtypeTags } = scoresFromAnswers(state, answers);
-  const next = { ...state, answers, scores, subtypeTags };
+  const { scores, subtypeTags, axisScores, crossMatchApplied } =
+    scoresFromAnswers(state, answers);
+  const next = {
+    ...state,
+    answers,
+    scores,
+    subtypeTags,
+    axisScores,
+    crossMatchApplied,
+  };
   const branches = selectBranches(next);
   return {
     ...next,
@@ -57,16 +120,89 @@ function afterBaseComplete(state: ScanState, answers: AnswerMap): ScanState {
   };
 }
 
+function applyAdaptiveAnswer(
+  state: ScanState,
+  optionIndex: number,
+): ScanState {
+  const ready = validateQueue(state);
+  const qid = ready.adaptiveQueue[ready.baseIndex];
+  if (!qid) return afterBaseComplete(ready, ready.answers);
+
+  const skipped = ready.skipped.filter((id) => id !== qid);
+  const answers = { ...ready.answers, [qid]: optionIndex };
+
+  let adaptiveQueue = [...ready.adaptiveQueue];
+  if (
+    ready.answers[qid] !== undefined &&
+    ready.answers[qid] !== optionIndex
+  ) {
+    adaptiveQueue = adaptiveQueue.slice(0, ready.baseIndex + 1);
+  }
+
+  const interim = { ...ready, skipped, answers, adaptiveQueue };
+  const { scores, subtypeTags, axisScores, crossMatchApplied } =
+    scoresFromAnswers(interim, answers);
+
+  if (ready.baseIndex >= adaptiveQueue.length - 1) {
+    const nextIds = pickNextQuestionIds({
+      ...interim,
+      scores,
+      axisScores,
+      crossMatchApplied,
+    });
+    adaptiveQueue = [...adaptiveQueue, ...nextIds];
+  }
+
+  const complete = shouldCompleteAdaptive({
+    ...interim,
+    scores,
+    axisScores,
+    crossMatchApplied,
+    adaptiveQueue,
+  });
+  const atEnd = ready.baseIndex >= adaptiveQueue.length - 1;
+
+  if (!complete || !atEnd) {
+    return {
+      ...interim,
+      scores,
+      subtypeTags,
+      axisScores,
+      crossMatchApplied,
+      adaptiveQueue,
+      baseIndex: ready.baseIndex + 1,
+      phase: "base",
+    };
+  }
+
+  return afterBaseComplete(
+    {
+      ...interim,
+      scores,
+      subtypeTags,
+      axisScores,
+      crossMatchApplied,
+      adaptiveQueue,
+    },
+    answers,
+  );
+}
+
 export function applyBaseAnswer(
   state: ScanState,
   optionIndex: number,
 ): ScanState {
+  if (usesAdaptiveFlow(state)) {
+    return applyAdaptiveAnswer(state, optionIndex);
+  }
+
   const bank = questionBank(state.audience);
   const question = bank[state.baseIndex];
   const skipped = state.skipped.filter((id) => id !== question.id);
   const answers = { ...state.answers, [question.id]: optionIndex };
   const nextState = { ...state, skipped, answers };
-  const { scores, subtypeTags } = scoresFromAnswers(nextState, answers);
+  const { scores, subtypeTags, axisScores, crossMatchApplied } =
+    scoresFromAnswers(nextState, answers);
   const last = state.baseIndex >= bank.length - 1;
 
   if (!last) {
@@ -74,6 +210,8 @@ export function applyBaseAnswer(
       ...nextState,
       scores,
       subtypeTags,
+      axisScores,
+      crossMatchApplied,
       baseIndex: state.baseIndex + 1,
       phase: "base",
     };
@@ -83,6 +221,62 @@ export function applyBaseAnswer(
 }
 
 export function applySkip(state: ScanState): ScanState {
+  if (usesAdaptiveFlow(state)) {
+    const ready = validateQueue(state);
+    const qid = ready.adaptiveQueue[ready.baseIndex];
+    if (!qid) return state;
+    const adaptiveQuestion = getAdaptiveQuestion(qid, "tr");
+    if (!adaptiveQuestion?.skippable) return state;
+    const skipped = [...new Set([...ready.skipped, qid])];
+    const answers = { ...ready.answers, [qid]: SKIP_INDEX };
+    let adaptiveQueue = [...ready.adaptiveQueue];
+    const interim = { ...ready, skipped, answers, adaptiveQueue };
+    const { scores, subtypeTags, axisScores, crossMatchApplied } =
+      scoresFromAnswers(interim, answers);
+
+    if (ready.baseIndex >= adaptiveQueue.length - 1) {
+      const nextIds = pickNextQuestionIds({
+        ...interim,
+        scores,
+        axisScores,
+        crossMatchApplied,
+      });
+      adaptiveQueue = [...adaptiveQueue, ...nextIds];
+    }
+
+    const complete = shouldCompleteAdaptive({
+      ...interim,
+      scores,
+      axisScores,
+      crossMatchApplied,
+      adaptiveQueue,
+    });
+    const atEnd = ready.baseIndex >= adaptiveQueue.length - 1;
+
+    if (!complete || !atEnd) {
+      return {
+        ...interim,
+        scores,
+        subtypeTags,
+        axisScores,
+        crossMatchApplied,
+        adaptiveQueue,
+        baseIndex: ready.baseIndex + 1,
+      };
+    }
+    return afterBaseComplete(
+      {
+        ...interim,
+        scores,
+        subtypeTags,
+        axisScores,
+        crossMatchApplied,
+        adaptiveQueue,
+      },
+      answers,
+    );
+  }
+
   const bank = questionBank(state.audience);
   const question = bank[state.baseIndex];
   if (!question?.skippable) return state;
@@ -91,11 +285,14 @@ export function applySkip(state: ScanState): ScanState {
   const nextState = { ...state, skipped, answers };
   const last = state.baseIndex >= bank.length - 1;
   if (!last) {
-    const { scores, subtypeTags } = scoresFromAnswers(nextState, answers);
+    const { scores, subtypeTags, axisScores, crossMatchApplied } =
+      scoresFromAnswers(nextState, answers);
     return {
       ...nextState,
       scores,
       subtypeTags,
+      axisScores,
+      crossMatchApplied,
       baseIndex: state.baseIndex + 1,
     };
   }
@@ -103,8 +300,9 @@ export function applySkip(state: ScanState): ScanState {
 }
 
 export function finishVisual(state: ScanState): ScanState {
-  const { scores, subtypeTags } = scoresFromAnswers(state, state.answers);
-  const next = { ...state, scores, subtypeTags };
+  const { scores, subtypeTags, axisScores, crossMatchApplied } =
+    scoresFromAnswers(state, state.answers);
+  const next = { ...state, scores, subtypeTags, axisScores, crossMatchApplied };
   const branches = selectBranches(next);
   return {
     ...next,
@@ -119,15 +317,13 @@ export function applyDiffAnswer(
   state: ScanState,
   optionIndex: number,
 ): ScanState {
-  const branch = DIFFERENTIAL_BRANCHES[state.branches[state.branchIndex]];
+  const branch = resolveBranch(state.branches[state.branchIndex]);
   if (!branch) return { ...state, phase: "done" };
 
   const question = branch.questions[state.diffQuestionIndex];
   const answers = { ...state.answers, [question.id]: optionIndex };
-  const { scores, subtypeTags } = scoresFromAnswers(
-    { ...state, answers },
-    answers,
-  );
+  const { scores, subtypeTags, axisScores, crossMatchApplied } =
+    scoresFromAnswers({ ...state, answers }, answers);
   const lastInBranch = state.diffQuestionIndex >= branch.questions.length - 1;
   const lastBranch = state.branchIndex >= state.branches.length - 1;
 
@@ -137,6 +333,8 @@ export function applyDiffAnswer(
       answers,
       scores,
       subtypeTags,
+      axisScores,
+      crossMatchApplied,
       diffQuestionIndex: state.diffQuestionIndex + 1,
     };
   }
@@ -147,6 +345,8 @@ export function applyDiffAnswer(
       answers,
       scores,
       subtypeTags,
+      axisScores,
+      crossMatchApplied,
       branchIndex: state.branchIndex + 1,
       diffQuestionIndex: 0,
     };
@@ -157,11 +357,42 @@ export function applyDiffAnswer(
     answers,
     scores,
     subtypeTags,
+    axisScores,
+    crossMatchApplied,
     phase: "done",
   };
 }
 
 export function goBack(state: ScanState): ScanState {
+  if (usesAdaptiveFlow(state)) {
+    if (state.phase === "bridge") {
+      const lastIndex = Math.max(0, state.adaptiveQueue.length - 1);
+      return { ...state, phase: "base", baseIndex: lastIndex };
+    }
+    if (state.phase === "base") {
+      if (state.baseIndex === 0) {
+        return { ...state, phase: "intro" };
+      }
+      return { ...state, baseIndex: state.baseIndex - 1 };
+    }
+    if (state.phase === "diff") {
+      if (state.diffQuestionIndex > 0) {
+        return { ...state, diffQuestionIndex: state.diffQuestionIndex - 1 };
+      }
+      if (state.branchIndex > 0) {
+        const prevId = state.branches[state.branchIndex - 1];
+        const prev = resolveBranch(prevId);
+        return {
+          ...state,
+          branchIndex: state.branchIndex - 1,
+          diffQuestionIndex: Math.max(0, (prev?.questions.length ?? 1) - 1),
+        };
+      }
+      return { ...state, phase: "bridge" };
+    }
+    return state;
+  }
+
   const bank = questionBank(state.audience);
 
   if (state.phase === "bridge") {
@@ -181,7 +412,7 @@ export function goBack(state: ScanState): ScanState {
     }
     if (state.branchIndex > 0) {
       const prevId = state.branches[state.branchIndex - 1];
-      const prev = DIFFERENTIAL_BRANCHES[prevId];
+      const prev = resolveBranch(prevId);
       return {
         ...state,
         branchIndex: state.branchIndex - 1,

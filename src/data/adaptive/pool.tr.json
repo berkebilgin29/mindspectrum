@@ -1,0 +1,2343 @@
+{
+  "version": "Prototip 0.2 — 35 soruluk davranış katmanı (ADHD dışı)",
+  "language": "tr",
+  "note": "ADHD modülü ayrıdır (mevcut 10 soruluk matris). Bu havuz kalan 8 boyutu kapsar.",
+  "axes": {
+    "OKB": {
+      "label": "Obsesif Kompulsif Spektrum",
+      "base": "OCI-R / Y-BOCS",
+      "axes": {
+        "OBS": "Obsession — istenmeyen tekrarlayıcı düşünce, zihinsel meşguliyet",
+        "COM": "Compulsion — kontrol, yıkama, tekrar, zihinsel nötralizasyon",
+        "SYM": "Symmetry & 'not just right' — düzen, simetri, tam olma hissi",
+        "RSP": "Inflated responsibility — abartılmış sorumluluk, düşünce-eylem kaynaşması",
+        "DIS": "Distress & Interference — ritüel engellenince sıkıntı, işlev kaybı"
+      }
+    },
+    "DEP": {
+      "label": "Depresif Belirti Örüntüsü",
+      "base": "PHQ-9 / BDI-II",
+      "axes": {
+        "ANH": "Anhedonia — ilgi ve zevk kaybı, ödül sönümlenmesi",
+        "ENR": "Energy & psychomotor — efor eşiği, yavaşlama, somatik ağırlık",
+        "NCG": "Negative cognition — değersizlik, suçluluk, umutsuzluk (Beck üçlüsü)",
+        "SLP": "Sleep & circadian — uyku mimarisi, sabah aktivasyonu"
+      }
+    },
+    "YAB": {
+      "label": "Yaygın Anksiyete",
+      "base": "GAD-7",
+      "axes": {
+        "WOR": "Worry — kontrol edilemeyen endişe, felaketleştirme",
+        "TNS": "Somatic tension — kas gerginliği, otonomik uyarılma, interosepsiyon",
+        "IRR": "Irritability — tahammülsüzlük, çabuk öfkelenme",
+        "IUC": "Intolerance of uncertainty — belirsizliğe tahammülsüzlük, güvence arayışı"
+      }
+    },
+    "SOS": {
+      "label": "Sosyal Anksiyete",
+      "base": "LSAS",
+      "axes": {
+        "PRF": "Performance anxiety — izlenme, performans anı korkusu",
+        "ITA": "Interaction anxiety — etkileşim başlatma, otorite, hak arama",
+        "AVD": "Avoidance & safety behaviour — kaçınma ve güvenlik davranışları",
+        "PEV": "Post-event processing — olay sonrası zihinsel tekrar/otopsi"
+      }
+    },
+    "OTZ": {
+      "label": "Otizm Spektrumu & Maskeleme",
+      "base": "AQ-10 / CAT-Q",
+      "axes": {
+        "SEN": "Sensory processing — duyusal aşırı duyarlılık, aşırı yüklenme",
+        "RIG": "Rigidity & monotropism — rutin bağlılığı, geçiş güçlüğü, derin ilgi",
+        "CAM": "Camouflaging — maskeleme, asimilasyon, kompansasyon, bilişsel yük",
+        "SCM": "Social communication — örtük kural, ima, bağlam okuma"
+      }
+    },
+    "BIP": {
+      "label": "Bipolar Spektrum",
+      "base": "MDQ",
+      "axes": {
+        "HYP": "Hypomania & grandiosity — basınçlı konuşma, özgüven artışı, düşünce uçuşması",
+        "CYC": "Cycling — dış olaydan bağımsız, epizodik, kendiliğinden döngü",
+        "SLD": "Sleep need decrease — uyku ihtiyacında azalma (uyuyamama DEĞİL)",
+        "RSK": "Risk & disinhibition — dürtüsel büyük kararlar, aşırı harcama"
+      }
+    },
+    "TSB": {
+      "label": "Travma / TSSB",
+      "base": "PCL-5",
+      "axes": {
+        "INR": "Intrusion — istemsiz anı, rüya, flashback, tetiklenmiş reaktivite",
+        "AVT": "Avoidance — travma çağrıştıranlardan eforlu kaçınma",
+        "ARO": "Hyperarousal — hipervijilans, irkilme, uyku/konsantrasyon",
+        "NCM": "Negative cognition & mood — güvensizlik, uyuşma, yabancılaşma",
+        "DSC": "Dissociation — kopma, depersonalizasyon, zaman kaybı, donma"
+      }
+    },
+    "DDR": {
+      "label": "Duygu Regülasyon Güçlüğü / Sınır Örüntüler",
+      "base": "DERS-16 / MSI-BPD",
+      "axes": {
+        "EMR": "Emotional reactivity — hızlı yükselme, uzamış sönümlenme",
+        "FOA": "Fear of abandonment — reddedilme/terk edilme hassasiyeti",
+        "IMP": "Impulsivity under distress — sıkıntı anında dürtüsel eylem",
+        "IDN": "Identity & emptiness — kronik boşluk, kimlik dalgalanması",
+        "STR": "Limited strategies — duyguyu kabul edememe, netlik yokluğu, çaresizlik"
+      }
+    }
+  },
+  "global_axes": {
+    "FUN": "Functional interference — günlük işlev, iş/okul/ilişki üzerindeki etki"
+  },
+  "flags": {
+    "ADHD": "ADHD lehine ayırt edici cevap — ADHD modülüne bonus taşır, bu modülde puan üretmez",
+    "SAFETY": "Güvenlik katmanını tetikler",
+    "GATE_A": "Kapı sorusu — 'olay yok' yanıtı modülün kalanını atlatır"
+  },
+  "questions": [
+    {
+      "id": "OCD-01",
+      "domain": "OKB",
+      "tier": "core",
+      "title": "Gönderilmiş mesajın kontrolü",
+      "scenario": "Bir işi/başvuruyu bitirdin ve önemli bir e-postayı veya mesajı gönderdin. 'Gönder'e bastıktan sonraki birkaç saat genellikle nasıl geçer?",
+      "gate": null,
+      "show_if": null,
+      "options": [
+        {
+          "key": "A",
+          "text": "Sekmeyi kapatır, aklımdan çıkarır, başka işime geçerim.",
+          "scores": {},
+          "flags": [],
+          "note": "Nötr; kapanma becerisi sağlıklı."
+        },
+        {
+          "key": "B",
+          "text": "Bir kez gönderilenlere bakıp gittiğini teyit eder, sonra kapatırım.",
+          "scores": {
+            "COM": 1
+          },
+          "flags": [],
+          "note": "Tek seferlik uyumsal kontrol."
+        },
+        {
+          "key": "C",
+          "text": "Aynı mesajı defalarca açıp okurum; yazım hatası, eksik ek veya yanlış anlaşılacak bir cümle var mı diye tararım. Kontrolü bıraktığımda bile içim rahat etmez.",
+          "scores": {
+            "OBS": 1,
+            "COM": 2,
+            "DIS": 1
+          },
+          "flags": [],
+          "note": "Tekrarlayıcı kontrol + güvence sağlamama; Y-BOCS zaman/sıkıntı kriteri."
+        },
+        {
+          "key": "D",
+          "text": "Zaten göndermem saatler sürer; cümleyi 'tam doğru' formüle edemediğim sürece gönder tuşuna basamam, defalarca yeniden yazarım.",
+          "scores": {
+            "OBS": 1,
+            "SYM": 2,
+            "DIS": 1,
+            "FUN": 1
+          },
+          "flags": [],
+          "note": "'Not just right' + mükemmeliyetçi felç; görev gecikmesi."
+        },
+        {
+          "key": "E",
+          "text": "Yanlış bir şey yazdıysam karşı tarafın zarar göreceği veya işin benim yüzümden bozulacağı düşüncesi günlerce aklımdan çıkmaz.",
+          "scores": {
+            "OBS": 2,
+            "RSP": 2,
+            "DIS": 1
+          },
+          "flags": [],
+          "note": "Abartılmış sorumluluk + obsesif ruminasyon."
+        }
+      ]
+    },
+    {
+      "id": "OCD-02",
+      "domain": "OKB",
+      "tier": "core",
+      "title": "Bulaşma ve ara temas",
+      "scenario": "Toplu taşımadan indin, yol boyunca tutamağa tutundun. Eve gitmeden önce markete uğraman gerekiyor. Bu ara süreçte ellerinle ilgili genellikle ne yaşarsın?",
+      "gate": null,
+      "show_if": null,
+      "options": [
+        {
+          "key": "A",
+          "text": "Ellerimin 'kirli' olduğu düşüncesi zihnimden gitmez; eve varana kadar yüzüme, telefonuma, çantama dokunmamaya çalışırım ve eve girer girmez kıyafetlerimi değiştiririm.",
+          "scores": {
+            "OBS": 2,
+            "COM": 2,
+            "DIS": 2,
+            "FUN": 1
+          },
+          "flags": [],
+          "note": "OCI-R yıkama boyutu; kaçınma + ritüel + belirgin işlev yükü."
+        },
+        {
+          "key": "B",
+          "text": "Ellerimi hiç düşünmem, doğrudan markete girerim.",
+          "scores": {},
+          "flags": [],
+          "note": "Nötr."
+        },
+        {
+          "key": "C",
+          "text": "Markette bir şeye dokunmadan önce mutlaka dezenfektan kullanmam gerekir; yanımda yoksa alışveriş boyunca huzursuz olurum.",
+          "scores": {
+            "COM": 1,
+            "DIS": 1
+          },
+          "flags": [],
+          "note": "Ritüele bağımlı rahatlama; engellenince sıkıntı."
+        },
+        {
+          "key": "D",
+          "text": "Eve varınca normal şekilde ellerimi yıkarım, o kadar.",
+          "scores": {},
+          "flags": [],
+          "note": "Uyumsal hijyen."
+        },
+        {
+          "key": "E",
+          "text": "Kendi ellerimden çok, benim yüzümden evdeki birine bir şey bulaştıracağım düşüncesi rahatsız eder.",
+          "scores": {
+            "OBS": 1,
+            "RSP": 2,
+            "DIS": 1
+          },
+          "flags": [],
+          "note": "Sorumluluk odaklı bulaşma; başkasına zarar teması."
+        }
+      ]
+    },
+    {
+      "id": "OCD-03",
+      "domain": "OKB",
+      "tier": "core",
+      "title": "İstenmeyen düşünceye tepki",
+      "scenario": "Herkesin zihnine zaman zaman kendi değerleriyle hiç uyuşmayan, istemediği, rahatsız edici düşünceler gelebilir. Böyle bir düşünce aklına düştüğünde genellikle ne olur?",
+      "gate": null,
+      "show_if": null,
+      "options": [
+        {
+          "key": "A",
+          "text": "Tuhaf bir düşünce diye geçer, üzerinde durmam.",
+          "scores": {},
+          "flags": [],
+          "note": "Normalize etme; sağlıklı bilişsel esneklik."
+        },
+        {
+          "key": "B",
+          "text": "Bunu düşünmüş olmam bile beni endişelendirir; 'demek ki içimde böyle bir şey var' diye kendimi sorgular, saatlerce bunun hesabını yaparım.",
+          "scores": {
+            "OBS": 2,
+            "RSP": 1,
+            "DIS": 1
+          },
+          "flags": [],
+          "note": "Düşünce-eylem kaynaşması (TAF) ve ahlaki obsesyon."
+        },
+        {
+          "key": "C",
+          "text": "Rahatsız olurum ama 'beyin işte' deyip devam ederim.",
+          "scores": {},
+          "flags": [],
+          "note": "Uyumsal mesafelenme."
+        },
+        {
+          "key": "D",
+          "text": "Düşünceyi kafamdan atmak için içimden bir şeyler sayarım, tekrar ederim veya 'iyi' bir düşünceyle üstünü kapatmaya çalışırım.",
+          "scores": {
+            "OBS": 1,
+            "COM": 2,
+            "DIS": 1
+          },
+          "flags": [],
+          "note": "Zihinsel nötralizasyon — görünmez kompulsiyon (OCI-R obsesyon alt boyutu)."
+        },
+        {
+          "key": "E",
+          "text": "O düşünceyi tetikleyen ortamdan, kişiden veya nesneden sonrasında uzak durmaya başlarım.",
+          "scores": {
+            "OBS": 1,
+            "COM": 1,
+            "DIS": 2,
+            "FUN": 1
+          },
+          "flags": [],
+          "note": "Obsesyona bağlı davranışsal kaçınma; yaşam alanının daralması."
+        }
+      ]
+    },
+    {
+      "id": "OCD-04",
+      "domain": "OKB",
+      "tier": "ext",
+      "title": "Tekrar ve 'tam olma' hissi",
+      "scenario": "Bir metni okurken, merdiven çıkarken veya bir eşyayı yerleştirirken 'belli bir sayıya kadar' ya da 'doğru hissedene kadar' tekrar etme ihtiyacı duyar mısın?",
+      "gate": null,
+      "show_if": null,
+      "options": [
+        {
+          "key": "A",
+          "text": "Hayır, böyle bir ihtiyacım hiç olmadı.",
+          "scores": {},
+          "flags": [],
+          "note": "Sinyal yok."
+        },
+        {
+          "key": "B",
+          "text": "Bir cümleyi tekrar okuduğum olur ama sebebi dikkatimin kaymış olması, bir his değil.",
+          "scores": {},
+          "flags": [
+            "ADHD"
+          ],
+          "note": "Dikkat kayması kaynaklı tekrar — OKB değil, ADHD lehine."
+        },
+        {
+          "key": "C",
+          "text": "Böyle tekrarlarım olur ama sadece çok stresli dönemlerde artar.",
+          "scores": {
+            "SYM": 1,
+            "DIS": 1
+          },
+          "flags": [],
+          "note": "Stresle tetiklenen subklinik ritüel."
+        },
+        {
+          "key": "D",
+          "text": "Bir paragrafı 'içime sinene' kadar tekrar okurum; anlamış olsam bile o his gelmezse devam edemem.",
+          "scores": {
+            "SYM": 2,
+            "DIS": 1,
+            "FUN": 1
+          },
+          "flags": [],
+          "note": "Saf 'not just right experience'; anlama değil his kriteri."
+        },
+        {
+          "key": "E",
+          "text": "Belirli sayılara veya çift sayılara göre hareket ederim; ters gelirse baştan başlarım.",
+          "scores": {
+            "SYM": 2,
+            "COM": 1,
+            "DIS": 1
+          },
+          "flags": [],
+          "note": "Sayma kompulsiyonu ve simetri kuralı."
+        }
+      ]
+    },
+    {
+      "id": "DEP-01",
+      "domain": "DEP",
+      "tier": "core",
+      "title": "Sevilen aktivitenin tadı",
+      "scenario": "Uzun süredir keyif aldığın bir şey var (bir hobi, bir dizi, müzik, oyun). Son iki haftayı düşün: bu şeyle aranda ne oldu?",
+      "gate": null,
+      "show_if": null,
+      "options": [
+        {
+          "key": "A",
+          "text": "Keyif almıyorum ama alışkanlıktan devam ediyorum; yaparken içimde hiçbir şey olmuyor.",
+          "scores": {
+            "ANH": 2
+          },
+          "flags": [],
+          "note": "Klasik anhedoni; uyaran var, ödül yanıtı yok."
+        },
+        {
+          "key": "B",
+          "text": "Hâlâ aynı keyfi alıyorum.",
+          "scores": {},
+          "flags": [],
+          "note": "Anhedoni yok."
+        },
+        {
+          "key": "C",
+          "text": "Keyif alacağımı biliyorum ama başlamak için gereken enerjiyi bulamıyorum.",
+          "scores": {
+            "ENR": 2
+          },
+          "flags": [],
+          "note": "Ödül korunmuş, aktivasyon bozulmuş — anhedoni değil efor eşiği."
+        },
+        {
+          "key": "D",
+          "text": "Başlatıyorum, on dakika sonra 'bunu neden yapıyorum' deyip kapatıyorum, içim boş kalıyor.",
+          "scores": {
+            "ANH": 2,
+            "NCG": 1
+          },
+          "flags": [],
+          "note": "Ödül sönümlenmesi + anlamsızlık bilişi."
+        },
+        {
+          "key": "E",
+          "text": "İlgim başka bir şeye kaydı, yenisinden gayet keyif alıyorum.",
+          "scores": {},
+          "flags": [
+            "ADHD"
+          ],
+          "note": "Yenilik arayışı; ADHD ilgi döngüsü lehine."
+        }
+      ]
+    },
+    {
+      "id": "DEP-02",
+      "domain": "DEP",
+      "tier": "core",
+      "title": "Temel öz bakım eşiği",
+      "scenario": "Duş almak, bulaşıkları yıkamak, çamaşır asmak gibi temel işler son dönemde sende nasıl işliyor?",
+      "gate": null,
+      "show_if": null,
+      "options": [
+        {
+          "key": "A",
+          "text": "Rutin; düşünmeden yaparım.",
+          "scores": {},
+          "flags": [],
+          "note": "Normal aktivasyon."
+        },
+        {
+          "key": "B",
+          "text": "Erteliyorum ama gün içinde mutlaka hallediyorum.",
+          "scores": {
+            "ENR": 1
+          },
+          "flags": [],
+          "note": "Hafif efor artışı."
+        },
+        {
+          "key": "C",
+          "text": "Yapmam gerektiğini biliyorum, kendime kızıyorum ama bedenim hareket etmiyor; bu da beni daha da kötü hissettiriyor.",
+          "scores": {
+            "ENR": 2,
+            "NCG": 2,
+            "FUN": 1
+          },
+          "flags": [],
+          "note": "Psikomotor yavaşlama + suçluluk döngüsü (kendini besleyen kısır döngü)."
+        },
+        {
+          "key": "D",
+          "text": "Duş almak veya kıyafet değiştirmek gibi en basit şeyler gözümde dağ gibi büyüyor, günlerce erteleyebiliyorum.",
+          "scores": {
+            "ENR": 2,
+            "FUN": 2
+          },
+          "flags": [],
+          "note": "Belirgin işlev kaybı; PHQ-9 madde 4/8 karşılığı."
+        },
+        {
+          "key": "E",
+          "text": "Başlarsam bitiririm, sorun başlamakta; ilgimi çeken bir şey olsa hemen kalkarım.",
+          "scores": {
+            "ENR": 1
+          },
+          "flags": [
+            "ADHD"
+          ],
+          "note": "İlgi bağımlı aktivasyon — dopaminerjik efor eşiği, duygudurum değil."
+        }
+      ]
+    },
+    {
+      "id": "DEP-03",
+      "domain": "DEP",
+      "tier": "core",
+      "title": "Övgüyü alabilme",
+      "scenario": "Biri sana içtenlikle bir iltifat etti ya da yaptığın bir iş için teşekkür etti. İçinde ne olur?",
+      "gate": null,
+      "show_if": null,
+      "options": [
+        {
+          "key": "A",
+          "text": "Sevinirim, teşekkür ederim, gün boyu iyi hissettirir.",
+          "scores": {},
+          "flags": [],
+          "note": "Sağlıklı öz-değer."
+        },
+        {
+          "key": "B",
+          "text": "'Beni gerçekten tanısa böyle demezdi' diye düşünürüm; övgüyü içeri alamam.",
+          "scores": {
+            "NCG": 2
+          },
+          "flags": [],
+          "note": "Olumluyu diskalifiye etme; içselleştirilmiş değersizlik."
+        },
+        {
+          "key": "C",
+          "text": "İyi hissederim ama etkisi çok kısa sürer.",
+          "scores": {
+            "NCG": 1
+          },
+          "flags": [],
+          "note": "Zayıf pozitif afekt kalıcılığı."
+        },
+        {
+          "key": "D",
+          "text": "Rahatsız olurum, konuyu değiştiririm; ilgi odağı olmak beni gerer.",
+          "scores": {},
+          "flags": [],
+          "note": "Sosyal Anksiyete lehine (performans kaygısı), depresif biliş değil."
+        },
+        {
+          "key": "E",
+          "text": "Hiçbir şey hissetmem; ne övgü ne eleştiri bana ulaşıyor gibi.",
+          "scores": {
+            "ANH": 2,
+            "NCG": 1
+          },
+          "flags": [],
+          "note": "Duygusal uyuşma (numbing) — TSSB NCM ekseniyle çapraz kontrol edilmeli."
+        }
+      ]
+    },
+    {
+      "id": "DEP-04",
+      "domain": "DEP",
+      "tier": "core",
+      "title": "Uyku mimarisi",
+      "scenario": "Gece yatağa girdikten sonraki süreç ve sabah uyanışın son dönemde nasıl?",
+      "gate": null,
+      "show_if": null,
+      "options": [
+        {
+          "key": "A",
+          "text": "Yarım saat içinde uyurum, sabah normal kalkarım.",
+          "scores": {},
+          "flags": [],
+          "note": "Sağlıklı uyku mimarisi."
+        },
+        {
+          "key": "B",
+          "text": "Çok uyuyorum, on saati geçtiği oluyor, yine de hiç dinlenmemiş uyanıyorum.",
+          "scores": {
+            "SLP": 2,
+            "ENR": 2
+          },
+          "flags": [],
+          "note": "Hipersomni + 'leaden paralysis' — atipik depresyon örüntüsü."
+        },
+        {
+          "key": "C",
+          "text": "Uykuya dalamıyorum; zihnimde gün içindeki sahneler ve yarın olacaklar dönüp duruyor.",
+          "scores": {
+            "SLP": 1
+          },
+          "flags": [],
+          "note": "Anksiyete kaynaklı uyku başlangıç güçlüğü — YAB WOR ekseniyle çapraz kontrol."
+        },
+        {
+          "key": "D",
+          "text": "Uyuyabiliyorum ama sabaha karşı dörtte beşte uyanıp bir daha uyuyamıyorum; sabahlar günün en ağır saati.",
+          "scores": {
+            "SLP": 2,
+            "ENR": 1,
+            "NCG": 1
+          },
+          "flags": [],
+          "note": "Erken uyanma + diurnal varyasyon — melankolik özellikler."
+        },
+        {
+          "key": "E",
+          "text": "Gece saatleri benim en canlı olduğum zaman; gün bitmesin diye uykuyu bilerek erteliyorum.",
+          "scores": {
+            "SLP": 1
+          },
+          "flags": [
+            "ADHD"
+          ],
+          "note": "Gecikmiş faz / 'intikam uykusu erteleme' — ADHD ile sık birlikte."
+        }
+      ]
+    },
+    {
+      "id": "DEP-05",
+      "domain": "DEP",
+      "tier": "ext",
+      "title": "Gelecek tasavvuru",
+      "scenario": "Senden önümüzdeki altı ay için somut bir plan yazman istense, zihninde ne olur?",
+      "gate": null,
+      "show_if": null,
+      "options": [
+        {
+          "key": "A",
+          "text": "Somut hedeflerim var, oturup yazabilirim.",
+          "scores": {},
+          "flags": [],
+          "note": "Korunmuş gelecek yönelimi."
+        },
+        {
+          "key": "B",
+          "text": "Plan yaparım ama tutacağına inanmam.",
+          "scores": {
+            "NCG": 1
+          },
+          "flags": [],
+          "note": "Düşük öz-yeterlik beklentisi."
+        },
+        {
+          "key": "C",
+          "text": "Çok fazla plan yaparım ama hiçbirini uygulamaya geçiremem.",
+          "scores": {},
+          "flags": [
+            "ADHD"
+          ],
+          "note": "Niyet-eylem boşluğu — yürütücü işlev, umutsuzluk değil."
+        },
+        {
+          "key": "D",
+          "text": "Aklıma hiçbir şey gelmiyor; gelecek benim için gri ve boş bir alan.",
+          "scores": {
+            "NCG": 2,
+            "ANH": 1
+          },
+          "flags": [],
+          "note": "Gelecek yönelimli anhedoni; Beck üçlüsünün 'gelecek' ayağı."
+        },
+        {
+          "key": "E",
+          "text": "'Nasıl olsa bir şey değişmeyecek' hissi o kadar güçlü ki plan yapmayı anlamsız buluyorum.",
+          "scores": {
+            "NCG": 2,
+            "ENR": 1,
+            "FUN": 1
+          },
+          "flags": [],
+          "note": "Umutsuzluk (hopelessness) — sonuç ekranında ayrıca izlenmeli."
+        }
+      ]
+    },
+    {
+      "id": "GAD-01",
+      "domain": "YAB",
+      "tier": "core",
+      "title": "Endişe zinciri",
+      "scenario": "Küçük bir aksilik oldu: bir fatura gecikti ya da bir mesaja beklediğin sürede dönülmedi. Bunu fark ettikten sonraki yarım saatte zihninde ne olur?",
+      "gate": null,
+      "show_if": null,
+      "options": [
+        {
+          "key": "A",
+          "text": "Sonra hallederim deyip işime devam ederim.",
+          "scores": {},
+          "flags": [],
+          "note": "Sağlıklı tolerans."
+        },
+        {
+          "key": "B",
+          "text": "Kesin bilgiye ulaşana kadar rahat edemem; arar, sorar, teyit ederim.",
+          "scores": {
+            "IUC": 2,
+            "WOR": 1
+          },
+          "flags": [],
+          "note": "Belirsizlik intoleransı + güvence arayışı (OKB'den farkı: felaket sorumluluğu değil bilinmezlik)."
+        },
+        {
+          "key": "C",
+          "text": "Endişelenirim ama on beş dakika içinde dağılır.",
+          "scores": {
+            "WOR": 1
+          },
+          "flags": [],
+          "note": "Normal, sönümlenen endişe."
+        },
+        {
+          "key": "D",
+          "text": "Zihnim bir 'ya şöyle olursa' zincirine girer ve zincir kendi kendine büyür; durdurmak elimde değil.",
+          "scores": {
+            "WOR": 2,
+            "IUC": 1
+          },
+          "flags": [],
+          "note": "GAD-7 çekirdek maddesi: endişenin kontrol edilemezliği."
+        },
+        {
+          "key": "E",
+          "text": "Düşünceyi bastırmak için hemen bir şeye dalarım; sessiz kalırsam geliyorlar.",
+          "scores": {
+            "WOR": 1,
+            "TNS": 1
+          },
+          "flags": [],
+          "note": "Bilişsel kaçınma ile endişe yönetimi."
+        }
+      ]
+    },
+    {
+      "id": "GAD-02",
+      "domain": "YAB",
+      "tier": "core",
+      "title": "Dinlenme anındaki beden",
+      "scenario": "Akşam, yapılacak bir şey kalmadı, kanepede oturuyorsun. Bedeninde ne oluyor?",
+      "gate": null,
+      "show_if": null,
+      "options": [
+        {
+          "key": "A",
+          "text": "Bedenim gevşemez; omuzlarım ve çenem sürekli kasılı, ancak biri söyleyince fark ederim.",
+          "scores": {
+            "TNS": 2
+          },
+          "flags": [],
+          "note": "GAD-7 kas gerginliği; kronik tonik uyarılma."
+        },
+        {
+          "key": "B",
+          "text": "Boş kalınca huzursuzlanırım, kalkıp bir şey yapmam gerekir.",
+          "scores": {
+            "TNS": 1,
+            "WOR": 1
+          },
+          "flags": [
+            "ADHD"
+          ],
+          "note": "Motor huzursuzluk — ADHD hiperaktivite ile ayrıştırılmalı."
+        },
+        {
+          "key": "C",
+          "text": "Rahatlarım, gerçekten dinlenirim.",
+          "scores": {},
+          "flags": [],
+          "note": "Parasempatik geçiş sağlıklı."
+        },
+        {
+          "key": "D",
+          "text": "Rahatlarım ama uzun sürerse 'bir şeyi yapmadım' suçluluğu gelir.",
+          "scores": {
+            "WOR": 1,
+            "TNS": 1
+          },
+          "flags": [],
+          "note": "Dinlenmeye tahammülsüzlük; üretkenlik anksiyetesi."
+        },
+        {
+          "key": "E",
+          "text": "Kalp atışımı, nefesimi, midemi fark eder, 'bir şey mi oluyor' diye takip ederim.",
+          "scores": {
+            "TNS": 2,
+            "WOR": 1
+          },
+          "flags": [],
+          "note": "Artmış interosepsiyon + sağlık kaygısı bileşeni."
+        }
+      ]
+    },
+    {
+      "id": "GAD-03",
+      "domain": "YAB",
+      "tier": "core",
+      "title": "Tükenme ve tahammül",
+      "scenario": "Yoğun bir haftanın dördüncü günündesin. Ufak bir aksilik oldu: biri sözünü kesti ya da bir şey ters gitti.",
+      "gate": null,
+      "show_if": null,
+      "options": [
+        {
+          "key": "A",
+          "text": "Normal bir tepki veririm, geçer.",
+          "scores": {},
+          "flags": [],
+          "note": "Nötr."
+        },
+        {
+          "key": "B",
+          "text": "Sesim yükselir, sonra pişman olurum.",
+          "scores": {
+            "IRR": 2
+          },
+          "flags": [],
+          "note": "Dışa vuran irritabilite."
+        },
+        {
+          "key": "C",
+          "text": "İçimde orantısız bir öfke kabarır, sonra bunu yaşadığım için kendime kızarım.",
+          "scores": {
+            "IRR": 2,
+            "TNS": 1
+          },
+          "flags": [],
+          "note": "GAD-7 irritabilite maddesi + ikincil suçluluk."
+        },
+        {
+          "key": "D",
+          "text": "Kimseye bir şey demem ama içim titrer, günün kalanı mahvolur.",
+          "scores": {
+            "IRR": 1,
+            "TNS": 2
+          },
+          "flags": [],
+          "note": "İçe vuran uyarılma; somatik yansıma."
+        },
+        {
+          "key": "E",
+          "text": "Yorgunum diye kabul ederim, üzerinde durmam.",
+          "scores": {},
+          "flags": [],
+          "note": "Sağlıklı atıf."
+        }
+      ]
+    },
+    {
+      "id": "GAD-04",
+      "domain": "YAB",
+      "tier": "ext",
+      "title": "Sevdiğine ulaşamama",
+      "scenario": "Sevdiğin biri telefonunu birkaç saattir açmıyor ve nerede olduğunu bilmiyorsun.",
+      "gate": null,
+      "show_if": null,
+      "options": [
+        {
+          "key": "A",
+          "text": "Meşguldür der, beklerim.",
+          "scores": {},
+          "flags": [],
+          "note": "Nötr."
+        },
+        {
+          "key": "B",
+          "text": "Ulaşana kadar peş peşe arar, başkalarına sorarım; ulaşınca rahatlarım ama ertesi hafta aynısı olur.",
+          "scores": {
+            "IUC": 2,
+            "WOR": 1,
+            "FUN": 1
+          },
+          "flags": [],
+          "note": "Güvence arayışı döngüsü; kısa vadeli rahatlama endişeyi pekiştirir."
+        },
+        {
+          "key": "C",
+          "text": "Merak ederim ama üzerine gitmem.",
+          "scores": {},
+          "flags": [],
+          "note": "Nötr."
+        },
+        {
+          "key": "D",
+          "text": "Zihnimde kaza ve hastalık senaryoları canlanır; hastane isimleri bile aklıma gelir.",
+          "scores": {
+            "WOR": 2,
+            "IUC": 1
+          },
+          "flags": [],
+          "note": "Felaketleştirme; imgesel endişe üretimi."
+        },
+        {
+          "key": "E",
+          "text": "İçimde bir sıkışma olur; mide bulantısı, titreme gibi bedensel belirtiler verir.",
+          "scores": {
+            "TNS": 2,
+            "WOR": 1
+          },
+          "flags": [],
+          "note": "Somatik dominant anksiyete yanıtı."
+        }
+      ]
+    },
+    {
+      "id": "SAD-01",
+      "domain": "SOS",
+      "tier": "core",
+      "title": "Telefonla arama",
+      "scenario": "Bir kuruma telefon açman gerekiyor: randevu almak, bilgi sormak ya da bir işlemi iptal ettirmek. Numarayı tuşlamadan önceki ve sonraki süreç nasıl geçer?",
+      "gate": null,
+      "show_if": null,
+      "options": [
+        {
+          "key": "A",
+          "text": "Ararken sesim titrer, kelimeleri karıştırırım; karşı tarafın beni tuhaf bulacağını düşünürüm.",
+          "scores": {
+            "PRF": 2,
+            "ITA": 1
+          },
+          "flags": [],
+          "note": "LSAS 'telefonla konuşma' performans maddesi + otonomik yanıt."
+        },
+        {
+          "key": "B",
+          "text": "Ne diyeceğimi zihnimde prova ederim, sonra ararım.",
+          "scores": {
+            "ITA": 1
+          },
+          "flags": [],
+          "note": "Bilişsel prova; hafif etkileşim kaygısı."
+        },
+        {
+          "key": "C",
+          "text": "Aklıma geldiği anda ararım.",
+          "scores": {},
+          "flags": [],
+          "note": "Asertif; sinyal yok."
+        },
+        {
+          "key": "D",
+          "text": "Aramayı günlerce ertelerim; mümkünse yazılı kanaldan hallederim, olmuyorsa iş yarım kalır.",
+          "scores": {
+            "ITA": 1,
+            "AVD": 2,
+            "FUN": 1
+          },
+          "flags": [],
+          "note": "LSAS kaçınma boyutu; işlevsel maliyet kabul ediliyor."
+        },
+        {
+          "key": "E",
+          "text": "Ararım ama kapattıktan sonra konuşmayı kafamda tekrar tekrar oynatır, 'şunu neden dedim' derim.",
+          "scores": {
+            "PEV": 2
+          },
+          "flags": [],
+          "note": "Olay sonrası işlemleme (post-event processing) — sosyal anksiyetenin bakım mekanizması."
+        }
+      ]
+    },
+    {
+      "id": "SAD-02",
+      "domain": "SOS",
+      "tier": "core",
+      "title": "Herkes oturmuşken içeri girmek",
+      "scenario": "Geç kaldın. Kapıyı açtığında toplantı/ders/yemek çoktan başlamış ve herkes oturmuş olacak.",
+      "gate": null,
+      "show_if": null,
+      "options": [
+        {
+          "key": "A",
+          "text": "Bütün gözlerin üzerimde olduğunu hissederim; yüzüm kızarır, nasıl yürüdüğümü unuturum.",
+          "scores": {
+            "PRF": 2
+          },
+          "flags": [],
+          "note": "Yoğun performans kaygısı + kendine odaklı dikkat (self-focused attention)."
+        },
+        {
+          "key": "B",
+          "text": "Girer, boş bir yere otururum.",
+          "scores": {},
+          "flags": [],
+          "note": "Nötr."
+        },
+        {
+          "key": "C",
+          "text": "Kapının önünde bekler, uygun bir an kollarım; bulamazsam hiç girmem.",
+          "scores": {
+            "AVD": 2,
+            "PRF": 1
+          },
+          "flags": [],
+          "note": "Önleyici kaçınma; ortama girmeme kararı."
+        },
+        {
+          "key": "D",
+          "text": "Girerim ama en arkaya, en görünmez yere otururum.",
+          "scores": {
+            "AVD": 1,
+            "PRF": 1
+          },
+          "flags": [],
+          "note": "Kısmi kaçınma / güvenlik davranışı."
+        },
+        {
+          "key": "E",
+          "text": "Girmeden önce bir bahane hazırlarım; kimse sormasa bile açıklama yaparım.",
+          "scores": {
+            "ITA": 1,
+            "PRF": 1
+          },
+          "flags": [],
+          "note": "Önleyici hesap verme; olumsuz değerlendirme beklentisi."
+        }
+      ]
+    },
+    {
+      "id": "SAD-03",
+      "domain": "SOS",
+      "tier": "core",
+      "title": "Otorite karşısında itiraz",
+      "scenario": "Bir toplantıda ya da derste söylenen şeyin yanlış olduğunu biliyorsun ve düzeltebilecek bilgin var.",
+      "gate": null,
+      "show_if": null,
+      "options": [
+        {
+          "key": "A",
+          "text": "O anda söylerim.",
+          "scores": {},
+          "flags": [],
+          "note": "Asertif davranış."
+        },
+        {
+          "key": "B",
+          "text": "Toplantıdan sonra özel olarak söylerim.",
+          "scores": {
+            "ITA": 1,
+            "AVD": 1
+          },
+          "flags": [],
+          "note": "Grup önünden kaçınıp ikili kanala taşıma."
+        },
+        {
+          "key": "C",
+          "text": "Söylerim ama sonrasında saatlerce 'çok mu sert oldum, ne düşündüler' diye zihnimde çeviririm.",
+          "scores": {
+            "PEV": 2
+          },
+          "flags": [],
+          "note": "Olay sonrası otopsi; davranış korunmuş, maliyet bilişsel."
+        },
+        {
+          "key": "D",
+          "text": "Söylemem; 'ya ben yanlış anladıysam, herkesin önünde rezil olurum' derim.",
+          "scores": {
+            "ITA": 2,
+            "PRF": 1
+          },
+          "flags": [],
+          "note": "Olumsuz değerlendirilme korkusu (FNE) davranışı tamamen bloke ediyor."
+        },
+        {
+          "key": "E",
+          "text": "Otorite figürüne karşı özellikle susarım; eşitimle konuşurken hiç sorun yaşamam.",
+          "scores": {
+            "ITA": 2
+          },
+          "flags": [],
+          "note": "LSAS otorite ile etkileşim alt boyutu; bağlama özgü kaygı."
+        }
+      ]
+    },
+    {
+      "id": "SAD-04",
+      "domain": "SOS",
+      "tier": "ext",
+      "title": "Kalabalıkta idare etme stratejisi",
+      "scenario": "Tanımadığın insanların çoğunlukta olduğu bir ortamdasın ve bir süre orada kalman gerekiyor. Kendini nasıl 'idare edersin'?",
+      "gate": null,
+      "show_if": null,
+      "options": [
+        {
+          "key": "A",
+          "text": "Özel bir şey yapmam, doğal davranırım.",
+          "scores": {},
+          "flags": [],
+          "note": "Nötr."
+        },
+        {
+          "key": "B",
+          "text": "Yanımda mutlaka tanıdık biri olmalı; yalnız gitmem, gidersem çok kısa kalırım.",
+          "scores": {
+            "AVD": 2,
+            "ITA": 1
+          },
+          "flags": [],
+          "note": "Bağımlı güvenlik davranışı; yükü başkasına devretme."
+        },
+        {
+          "key": "C",
+          "text": "Çok konuşur, espri yaparım; içim titrese de dışarıdan son derece rahat görünürüm.",
+          "scores": {
+            "PRF": 1,
+            "ITA": 1
+          },
+          "flags": [],
+          "note": "Aşırı telafi (overcompensation) — Otizm CAM ekseniyle çapraz kontrol gerekir."
+        },
+        {
+          "key": "D",
+          "text": "Sürekli telefonla ilgilenirim veya elimde bir bardak/çanta tutarım.",
+          "scores": {
+            "AVD": 2
+          },
+          "flags": [],
+          "note": "Güvenlik nesnesi; mikro-kaçınma."
+        },
+        {
+          "key": "E",
+          "text": "Bir köşede kalır, kimseyle göz teması kurmam, sorulmadıkça konuşmam.",
+          "scores": {
+            "AVD": 2,
+            "ITA": 1
+          },
+          "flags": [],
+          "note": "Pasif kaçınma; yargılanma riskini minimize etme."
+        }
+      ]
+    },
+    {
+      "id": "ASD-01",
+      "domain": "OTZ",
+      "tier": "core",
+      "title": "Örtük ifade ve ima",
+      "scenario": "Biri sana 'bir ara buluşalım' dedi ya da 'iyiyim' dedi ama tonundan başka bir şey seziliyor. Bu tür ifadeleri nasıl işlersin?",
+      "gate": null,
+      "show_if": null,
+      "options": [
+        {
+          "key": "A",
+          "text": "Ne demek istediğini bağlamdan doğal olarak anlarım.",
+          "scores": {},
+          "flags": [],
+          "note": "Örtük bağlam okuma otomatik."
+        },
+        {
+          "key": "B",
+          "text": "Söylediğini olduğu gibi alırım; sonradan 'aslında öyle demek istememişti' dendiğinde şaşırırım.",
+          "scores": {
+            "SCM": 2
+          },
+          "flags": [],
+          "note": "Literal işlemleme; pragmatik dil farklılığı (AQ-10)."
+        },
+        {
+          "key": "C",
+          "text": "Anlarım ama anlamak için bilinçli olarak analiz etmem gerekir; kendiliğinden gelmez.",
+          "scores": {
+            "SCM": 1,
+            "CAM": 2
+          },
+          "flags": [],
+          "note": "CAT-Q kompansasyon: sosyal çıkarımın algoritmik olarak yapılması."
+        },
+        {
+          "key": "D",
+          "text": "Sürekli alt anlam ararım; 'acaba bana kızdı mı' diye düşünürüm.",
+          "scores": {},
+          "flags": [],
+          "note": "Sosyal Anksiyete lehine (tehdit yanlılığı), pragmatik güçlük değil."
+        },
+        {
+          "key": "E",
+          "text": "Bu tür belirsiz ifadeler beni yorar; net ve açık konuşulmasını tercih ederim.",
+          "scores": {
+            "SCM": 1,
+            "RIG": 1
+          },
+          "flags": [],
+          "note": "Belirsiz sosyal girdi maliyeti; netlik tercihi."
+        }
+      ]
+    },
+    {
+      "id": "ASD-02",
+      "domain": "OTZ",
+      "tier": "core",
+      "title": "İlgi alanının derinliği",
+      "scenario": "İlgi duyduğun konularla ilişkin nasıl? Süresini, derinliğini ve günündeki yerini düşün.",
+      "gate": null,
+      "show_if": null,
+      "options": [
+        {
+          "key": "A",
+          "text": "Birkaç hobim var, dengeli şekilde ilgilenirim.",
+          "scores": {},
+          "flags": [],
+          "note": "Nötr."
+        },
+        {
+          "key": "B",
+          "text": "Sürekli yeni konulara atlarım; birkaç hafta yoğun ilgilenip tamamen bırakırım.",
+          "scores": {},
+          "flags": [
+            "ADHD"
+          ],
+          "note": "Yenilik odaklı hiperfokus döngüsü — monotropizm değil."
+        },
+        {
+          "key": "C",
+          "text": "Bir konuya girdiğimde sistematik ve derinlemesine öğrenirim; yıllardır aynı konu ilgimi çeker ve anlatmaya başlayınca durmakta zorlanırım.",
+          "scores": {
+            "RIG": 2,
+            "SCM": 1
+          },
+          "flags": [],
+          "note": "Monotropik derin ilgi + infodumping; süreklilik kriteri kritik."
+        },
+        {
+          "key": "D",
+          "text": "İlgi alanım hakkında konuşurken karşımdakinin sıkıldığını çok geç fark ederim.",
+          "scores": {
+            "SCM": 2,
+            "RIG": 1
+          },
+          "flags": [],
+          "note": "Karşılıklılık (reciprocity) ve geri bildirim okuma farklılığı."
+        },
+        {
+          "key": "E",
+          "text": "İlgi alanım günümün büyük kısmını alır; ona ulaşamadığım günlerde kendimi düzensiz ve huzursuz hissederim.",
+          "scores": {
+            "RIG": 2
+          },
+          "flags": [],
+          "note": "İlgi alanının regülasyon işlevi görmesi."
+        }
+      ]
+    },
+    {
+      "id": "ASD-03",
+      "domain": "OTZ",
+      "tier": "core",
+      "title": "Doku, etiket ve yemek",
+      "scenario": "Kıyafet etiketleri, belirli kumaşlar veya yemek dokularıyla ilişkin nasıl?",
+      "gate": null,
+      "show_if": null,
+      "options": [
+        {
+          "key": "A",
+          "text": "Belirli bir kumaş veya doku bedenimde tahammül edilemez bir rahatsızlık yaratır; o kıyafeti giyemem. Bu bir tercih değil, fiziksel bir imkânsızlık gibi.",
+          "scores": {
+            "SEN": 2,
+            "RIG": 1
+          },
+          "flags": [],
+          "note": "Taktil hipersensitivite; tercih değil eşik farkı."
+        },
+        {
+          "key": "B",
+          "text": "Bazı etiketleri keserim ama çok da önemli bir mesele değil.",
+          "scores": {
+            "SEN": 1
+          },
+          "flags": [],
+          "note": "Hafif hassasiyet."
+        },
+        {
+          "key": "C",
+          "text": "Fark etmem bile.",
+          "scores": {},
+          "flags": [],
+          "note": "Sağlıklı duyusal filtreleme."
+        },
+        {
+          "key": "D",
+          "text": "Belirli yemek dokuları midemi bulandırır; yıllardır aynı sınırlı yemek listesiyle idare ederim.",
+          "scores": {
+            "SEN": 2,
+            "RIG": 2
+          },
+          "flags": [],
+          "note": "ARFID benzeri kısıtlı örüntü — otizmde sık; beslenme açısından ayrıca ele alınmalı."
+        },
+        {
+          "key": "E",
+          "text": "Yalnızca stresli dönemlerde hassaslaşırım.",
+          "scores": {
+            "SEN": 1
+          },
+          "flags": [],
+          "note": "Duruma bağlı duyusal eşik düşüşü."
+        }
+      ]
+    },
+    {
+      "id": "ASD-04",
+      "domain": "OTZ",
+      "tier": "ext",
+      "title": "Sosyal günün ertesi",
+      "scenario": "Yoğun bir sosyal veya iş gününün ERTESİ günü sende genellikle ne olur?",
+      "gate": null,
+      "show_if": null,
+      "options": [
+        {
+          "key": "A",
+          "text": "Normal şekilde devam ederim.",
+          "scores": {},
+          "flags": [],
+          "note": "Nötr."
+        },
+        {
+          "key": "B",
+          "text": "Yorgun olurum ama akşama kalmaz geçer.",
+          "scores": {},
+          "flags": [],
+          "note": "Nörotipik sosyal yorgunluk."
+        },
+        {
+          "key": "C",
+          "text": "Bir 'kapanma' yaşarım: konuşmak, mesaj atmak, karar vermek bile zor gelir; toparlanmam bir iki gün sürer.",
+          "scores": {
+            "CAM": 2,
+            "SEN": 1,
+            "FUN": 2
+          },
+          "flags": [],
+          "note": "Shutdown / otistik tükenmişlik; maskeleme borcunun ödenmesi."
+        },
+        {
+          "key": "D",
+          "text": "Toparlanmak için aynı rutini tekrarlamam gerekir: aynı yemek, aynı dizi, aynı oda.",
+          "scores": {
+            "RIG": 2,
+            "CAM": 1
+          },
+          "flags": [],
+          "note": "Öngörülebilirlik yoluyla regülasyon."
+        },
+        {
+          "key": "E",
+          "text": "Yorgunluğum daha çok 'ne düşündüler, ne dedim' kaygısıyla ilgilidir.",
+          "scores": {},
+          "flags": [],
+          "note": "Sosyal Anksiyete lehine (ruminasyon), işlemci tükenmesi değil."
+        }
+      ]
+    },
+    {
+      "id": "ASD-05",
+      "domain": "OTZ",
+      "tier": "ext",
+      "title": "Geçişler ve kendini düzenleme",
+      "scenario": "Bir işten diğerine geçmen gerekiyor: çalışmayı bırakıp yemeğe oturmak, oyunu kapatıp dışarı çıkmak gibi.",
+      "gate": null,
+      "show_if": null,
+      "options": [
+        {
+          "key": "A",
+          "text": "Kolayca geçerim.",
+          "scores": {},
+          "flags": [],
+          "note": "Yüksek bilişsel esneklik."
+        },
+        {
+          "key": "B",
+          "text": "Kolay geçerim ama o kadar sık geçerim ki hiçbirini bitiremem.",
+          "scores": {},
+          "flags": [
+            "ADHD"
+          ],
+          "note": "Görev değiştirme fazlalığı — geçiş güçlüğünün tersi."
+        },
+        {
+          "key": "C",
+          "text": "Geçişler bana zor gelir; bir işi bitirmeden diğerine geçemem, yarıda kalan iş zihnimde asılı kalır.",
+          "scores": {
+            "RIG": 2
+          },
+          "flags": [],
+          "note": "Monotropik dikkat; görev kapanışı ihtiyacı."
+        },
+        {
+          "key": "D",
+          "text": "Yoğunlaştığım şeyden koparılmak beni orantısız derecede sinirlendirir.",
+          "scores": {
+            "RIG": 2,
+            "SEN": 1
+          },
+          "flags": [],
+          "note": "Zorunlu geçişe karşı yoğun intolerans."
+        },
+        {
+          "key": "E",
+          "text": "Stres veya heyecan anında bacak sallamak, parmak oynatmak, ileri geri yürümek gibi tekrarlayan hareketler beni sakinleştirir ve bunu bilerek kullanırım.",
+          "scores": {
+            "SEN": 1,
+            "RIG": 1
+          },
+          "flags": [],
+          "note": "Kendini düzenleyici tekrarlayıcı hareket (stimming) — ADHD huzursuzluğundan farkı: sakinleştirici işlev."
+        }
+      ]
+    },
+    {
+      "id": "BIP-01",
+      "domain": "BIP",
+      "tier": "core",
+      "title": "Normalden farklı dönemler",
+      "scenario": "Geçmişe dönüp baktığında, kendini 'her zamanki halimden belirgin şekilde farklı' hissettiğin, birkaç gün ya da birkaç hafta süren dönemler oldu mu?",
+      "gate": null,
+      "show_if": null,
+      "options": [
+        {
+          "key": "A",
+          "text": "Bu dönemleri çevremdekiler fark eder; 'sen bu aralar bir tuhafsın, çok hızlısın' derler.",
+          "scores": {
+            "HYP": 2,
+            "CYC": 1
+          },
+          "flags": [],
+          "note": "Dış gözlemci doğrulaması — MDQ'nun en ayırt edici maddelerinden."
+        },
+        {
+          "key": "B",
+          "text": "Oldu ama her seferinde bir olaya bağlıydı: yeni bir aşk, yeni bir iş, tatil.",
+          "scores": {},
+          "flags": [],
+          "note": "Reaktif duygudurum — bipolar aleyhine önemli bulgu."
+        },
+        {
+          "key": "C",
+          "text": "Enerjim gün içinde bile hızla değişir; sabah bir türlü, akşam bambaşka olurum.",
+          "scores": {
+            "CYC": 1
+          },
+          "flags": [],
+          "note": "Ultradiyen dalgalanma — BPD duygu regülasyonuyla çapraz kontrol gerekir."
+        },
+        {
+          "key": "D",
+          "text": "Hayır, böyle dönemlerim olmadı.",
+          "scores": {},
+          "flags": [],
+          "note": "Sinyal yok."
+        },
+        {
+          "key": "E",
+          "text": "Sebepsiz başlayan dönemlerde çok daha üretken, konuşkan ve girişken olurum; sonra aynı sebepsizlikle sönerim.",
+          "scores": {
+            "CYC": 2,
+            "HYP": 1
+          },
+          "flags": [],
+          "note": "Otonom (dış olaydan bağımsız) epizodik döngü — MDQ çekirdek mantığı."
+        }
+      ]
+    },
+    {
+      "id": "BIP-02",
+      "domain": "BIP",
+      "tier": "core",
+      "title": "Yüksek dönemdeki kararlar",
+      "scenario": "Böyle yüksek enerjili bir dönemdeyken verdiğin kararlar, normal halinden farklılaşır mı?",
+      "gate": null,
+      "show_if": null,
+      "options": [
+        {
+          "key": "A",
+          "text": "Hayır, kararlarım değişmez.",
+          "scores": {},
+          "flags": [],
+          "note": "Stabilite."
+        },
+        {
+          "key": "B",
+          "text": "Riskli bir şey yapmam ama o dönemde kendimi olağanüstü yetenekli ve özel hissederim.",
+          "scores": {
+            "HYP": 2
+          },
+          "flags": [],
+          "note": "Grandiyözite; davranışa dönüşmemiş hipomanik biliş."
+        },
+        {
+          "key": "C",
+          "text": "Alışverişe eğilimliyim ama bu her zaman böyle, belirli bir döneme bağlı değil.",
+          "scores": {},
+          "flags": [
+            "ADHD"
+          ],
+          "note": "Süreklilik gösteren dürtüsellik — epizodik değil, ADHD lehine."
+        },
+        {
+          "key": "D",
+          "text": "İş bırakma, taşınma, yeni bir işe girişme gibi büyük kararları o dönemlerde aniden veririm.",
+          "scores": {
+            "HYP": 2,
+            "RSK": 2
+          },
+          "flags": [],
+          "note": "Amaca yönelik faaliyette epizodik artış + disinhibisyon."
+        },
+        {
+          "key": "E",
+          "text": "Normalde asla yapmayacağım harcamalar yaparım, sonra hesaba bakınca şaşırırım.",
+          "scores": {
+            "RSK": 2,
+            "HYP": 1
+          },
+          "flags": [],
+          "note": "MDQ aşırı harcama maddesi."
+        }
+      ]
+    },
+    {
+      "id": "BIP-03",
+      "domain": "BIP",
+      "tier": "core",
+      "title": "Az uykuyla ertesi gün",
+      "scenario": "Az uyuduğun bir gecenin ertesi günü genellikle nasıl olursun? (Uyuyamamak ile uykuya ihtiyaç duymamak arasındaki farkı düşünerek cevapla.)",
+      "gate": null,
+      "show_if": null,
+      "options": [
+        {
+          "key": "A",
+          "text": "Yorgun olurum, kahve olmadan gün geçmez.",
+          "scores": {},
+          "flags": [],
+          "note": "Normal fizyolojik yanıt."
+        },
+        {
+          "key": "B",
+          "text": "Uyuyamıyorum ve bu beni bitiriyor; uyumak istiyorum ama olmuyor.",
+          "scores": {},
+          "flags": [],
+          "note": "İnsomnia — uyku ihtiyacında azalma DEĞİL; depresyon/anksiyete lehine."
+        },
+        {
+          "key": "C",
+          "text": "Üç dört saat uyumama rağmen zinde uyanırım ve bu birkaç gün üst üste sürebilir.",
+          "scores": {
+            "SLD": 2,
+            "HYP": 1
+          },
+          "flags": [],
+          "note": "Azalmış uyku ihtiyacı — hipomani/maninin en özgül belirtisi."
+        },
+        {
+          "key": "D",
+          "text": "İlgi çekici bir şey varsa uykuyu unuturum ama iş bitince yorgunluk üzerime çöker.",
+          "scores": {},
+          "flags": [
+            "ADHD"
+          ],
+          "note": "Hiperfokus kaynaklı uykusuzluk; yorgunluk hissi korunmuş."
+        },
+        {
+          "key": "E",
+          "text": "Az uyuduğum dönemlerde sinirli, tahammülsüz ve hızlı olurum.",
+          "scores": {
+            "HYP": 1,
+            "SLD": 1,
+            "CYC": 1
+          },
+          "flags": [],
+          "note": "Disforik (irritabl) hipomani örüntüsü."
+        }
+      ]
+    },
+    {
+      "id": "BIP-04",
+      "domain": "BIP",
+      "tier": "ext",
+      "title": "Dönem sonrası",
+      "scenario": "Yüksek enerjili bir dönem sona erdikten sonra ne olur?",
+      "gate": null,
+      "show_if": null,
+      "options": [
+        {
+          "key": "A",
+          "text": "Böyle bir dönem yaşamadım.",
+          "scores": {},
+          "flags": [],
+          "note": "Sinyal yok."
+        },
+        {
+          "key": "B",
+          "text": "Sonrasında günlerce, bazen haftalarca çukura düşerim; o dönemde başlattığım işler yarım kalır.",
+          "scores": {
+            "CYC": 2,
+            "FUN": 2
+          },
+          "flags": [],
+          "note": "Epizot sonrası depresif geçiş + işlevsel enkaz — spektrum lehine güçlü bulgu."
+        },
+        {
+          "key": "C",
+          "text": "Böyle bir iniş yaşamam, sadece normale dönerim.",
+          "scores": {
+            "CYC": 1
+          },
+          "flags": [],
+          "note": "Zayıf döngü kanıtı."
+        },
+        {
+          "key": "D",
+          "text": "O dönemde söylediklerimden, harcadıklarımdan veya kurduğum ilişkilerden sonradan utanırım.",
+          "scores": {
+            "HYP": 1,
+            "RSK": 2,
+            "FUN": 1
+          },
+          "flags": [],
+          "note": "Epizot içi disinhibisyonun geriye dönük tanınması."
+        },
+        {
+          "key": "E",
+          "text": "İniş ve çıkış aynı gün içinde iç içe olabiliyor; hem çok enerjik hem çok kötü hissedebiliyorum.",
+          "scores": {
+            "CYC": 2,
+            "HYP": 1
+          },
+          "flags": [],
+          "note": "Karma özellikler (mixed features) — klinik olarak öncelikli değerlendirme gerektirir."
+        }
+      ]
+    },
+    {
+      "id": "PTS-01",
+      "domain": "TSB",
+      "tier": "core",
+      "title": "Kapı sorusu: anıların gelme biçimi",
+      "scenario": "Geçmişinde, hatırladığında bugün hâlâ bedeninde bir tepki oluşturan zor bir olay ya da dönem var mı? Varsa, bu anılar sana nasıl geliyor?",
+      "gate": "PTS_GATE",
+      "show_if": null,
+      "options": [
+        {
+          "key": "A",
+          "text": "Böyle bir olay veya dönem yok.",
+          "scores": {},
+          "flags": [
+            "GATE_A"
+          ],
+          "note": "Kapı kapalı: PTS-02/03/04 atlanır, yalnızca başka modüllerde ARO/DSC sinyali varsa PTS-04 sorulur."
+        },
+        {
+          "key": "B",
+          "text": "Var ama artık düşündüğümde sakin kalabiliyorum.",
+          "scores": {},
+          "flags": [],
+          "note": "İşlenmiş anı; patolojik sinyal yok."
+        },
+        {
+          "key": "C",
+          "text": "Var; istemediğim anlarda ben çağırmadan zihnime düşüyor ve o anda bedenim de tepki veriyor.",
+          "scores": {
+            "INR": 2,
+            "ARO": 1
+          },
+          "flags": [],
+          "note": "PCL-5 istemsiz anı + tetiklenmiş fizyolojik reaktivite."
+        },
+        {
+          "key": "D",
+          "text": "Var; rüyalarımda görüyorum ya da sebebini bilmediğim bir tedirginlikle uyanıyorum.",
+          "scores": {
+            "INR": 2,
+            "ARO": 1
+          },
+          "flags": [],
+          "note": "Travmatik rüya / uyku dönemi yeniden yaşantılama."
+        },
+        {
+          "key": "E",
+          "text": "Var ama hatırlamamaya çalışıyorum; detayları zaten net hatırlamıyorum.",
+          "scores": {
+            "AVT": 2,
+            "DSC": 1
+          },
+          "flags": [],
+          "note": "İçsel kaçınma + disosiyatif amnezi bileşeni."
+        }
+      ]
+    },
+    {
+      "id": "PTS-02",
+      "domain": "TSB",
+      "tier": "core",
+      "title": "Yeni bir ortama girerken",
+      "scenario": "Tanımadığın bir mekâna girdiğinde ilk yaptığın şey nedir?",
+      "gate": null,
+      "show_if": "PTS_GATE",
+      "options": [
+        {
+          "key": "A",
+          "text": "Rahatça bir yere oturur, ortamla ilgilenmem.",
+          "scores": {},
+          "flags": [],
+          "note": "Nötr."
+        },
+        {
+          "key": "B",
+          "text": "Kalabalık beni bunaltır, sesler ve ışık rahatsız eder.",
+          "scores": {},
+          "flags": [],
+          "note": "Otizm duyusal profili lehine; tehdit taraması değil."
+        },
+        {
+          "key": "C",
+          "text": "Çıkışları, kimlerin bulunduğunu ve kimin arkamda kaldığını otomatik olarak tararım; bunu düşünerek yapmam, kendiliğinden olur.",
+          "scores": {
+            "ARO": 2
+          },
+          "flags": [],
+          "note": "PCL-5 hipervijilans; otomatikleşmiş tehdit taraması."
+        },
+        {
+          "key": "D",
+          "text": "İnsanların beni izleyip izlemediğine bakarım.",
+          "scores": {},
+          "flags": [],
+          "note": "Sosyal Anksiyete lehine; tehdit değil değerlendirilme odağı."
+        },
+        {
+          "key": "E",
+          "text": "Ani seslerde beklenenden çok daha sert irkilirim ve toparlamam uzun sürer.",
+          "scores": {
+            "ARO": 2,
+            "INR": 1
+          },
+          "flags": [],
+          "note": "Abartılı irkilme yanıtı + yavaş otonomik toparlanma."
+        }
+      ]
+    },
+    {
+      "id": "PTS-03",
+      "domain": "TSB",
+      "tier": "core",
+      "title": "Dünyaya ve insanlara bakış",
+      "scenario": "Son dönemde insanlara ve dünyaya dair içinde yerleşmiş temel his hangisi?",
+      "gate": null,
+      "show_if": "PTS_GATE",
+      "options": [
+        {
+          "key": "A",
+          "text": "'Kimseye tam güvenilmez, ne zaman ne olacağı belli olmaz' düşüncesi bende bir inanç hâline geldi.",
+          "scores": {
+            "NCM": 2
+          },
+          "flags": [],
+          "note": "PCL-5 kalıcı olumsuz inanç; dünya şemasının değişmesi."
+        },
+        {
+          "key": "B",
+          "text": "İnsanlara genel olarak güvenirim, dünya makul bir yer.",
+          "scores": {},
+          "flags": [],
+          "note": "Nötr."
+        },
+        {
+          "key": "C",
+          "text": "Yakınlarımdan bile uzaklaştığımı, aramızda görünmez bir mesafe olduğunu hissediyorum.",
+          "scores": {
+            "NCM": 2,
+            "AVT": 1
+          },
+          "flags": [],
+          "note": "Yabancılaşma (detachment); ilişkisel çekilme."
+        },
+        {
+          "key": "D",
+          "text": "Duygularımı eskisi gibi hissedemiyorum; sevinmem de üzülmem de sanki camın arkasından.",
+          "scores": {
+            "NCM": 2,
+            "DSC": 1
+          },
+          "flags": [],
+          "note": "Duygusal uyuşma (numbing) — Depresyon ANH ekseniyle çapraz kontrol."
+        },
+        {
+          "key": "E",
+          "text": "Olan şeyde bir şekilde benim de payım olduğu düşüncesinden kurtulamıyorum.",
+          "scores": {
+            "NCM": 2
+          },
+          "flags": [],
+          "note": "Çarpıtılmış kendini suçlama — travma sonrası özgül biliş."
+        }
+      ]
+    },
+    {
+      "id": "PTS-04",
+      "domain": "TSB",
+      "tier": "ext",
+      "title": "Yoğun anlarda kopma",
+      "scenario": "Çok stresli ya da tetiklenmiş bir andan sonra kendini nasıl bulursun?",
+      "gate": null,
+      "show_if": null,
+      "options": [
+        {
+          "key": "A",
+          "text": "Böyle bir şey yaşamam.",
+          "scores": {},
+          "flags": [],
+          "note": "Sinyal yok."
+        },
+        {
+          "key": "B",
+          "text": "Bazen bir süre 'orada olmadığımı', kendimi dışarıdan izliyormuş gibi hissederim.",
+          "scores": {
+            "DSC": 2
+          },
+          "flags": [],
+          "note": "Depersonalizasyon/derealizasyon — PCL-5 disosiyatif alt tip."
+        },
+        {
+          "key": "C",
+          "text": "Donup kalırım; konuşamam, hareket edemem, sonrasında çok yorulurum.",
+          "scores": {
+            "DSC": 2,
+            "ARO": 1
+          },
+          "flags": [],
+          "note": "Tonik immobilite / dorsal vagal kapanma."
+        },
+        {
+          "key": "D",
+          "text": "Bazı zaman aralıklarını hatırlamadığımı fark ederim; nasıl eve geldiğimi bilmediğim olur.",
+          "scores": {
+            "DSC": 2,
+            "FUN": 1
+          },
+          "flags": [],
+          "note": "Zaman kaybı — klinik değerlendirmede öncelikli."
+        },
+        {
+          "key": "E",
+          "text": "Tam tersine, aşırı hareketli ve konuşkan olurum.",
+          "scores": {
+            "ARO": 1
+          },
+          "flags": [],
+          "note": "Sempatik hiperaktivasyon yönünde yanıt."
+        }
+      ]
+    },
+    {
+      "id": "EDR-01",
+      "domain": "DDR",
+      "tier": "core",
+      "title": "Duygunun eğrisi",
+      "scenario": "Seni üzen ya da kızdıran bir olay yaşadın. Duygunun YÜKSELME hızını ve SÖNME süresini düşün.",
+      "gate": null,
+      "show_if": null,
+      "options": [
+        {
+          "key": "A",
+          "text": "Şiddeti orta ama sönmesi çok uzun sürüyor; saatlerce, bazen günlerce eski halime dönemiyorum.",
+          "scores": {
+            "EMR": 2,
+            "STR": 1
+          },
+          "flags": [],
+          "note": "Uzamış baseline dönüş süresi — BPD'nin en özgül parametrelerinden."
+        },
+        {
+          "key": "B",
+          "text": "Ne hissettiğimi tam adlandıramam; sadece kötü bir şey olduğunu bilirim.",
+          "scores": {
+            "STR": 2
+          },
+          "flags": [],
+          "note": "DERS duygusal netlik eksikliği (lack of clarity)."
+        },
+        {
+          "key": "C",
+          "text": "Yaşarım, bir süre sonra kendiliğinden geçer.",
+          "scores": {},
+          "flags": [],
+          "note": "Sağlıklı regülasyon."
+        },
+        {
+          "key": "D",
+          "text": "Duyguyu hissettiğim an için kendime kızarım; 'böyle hissetmemeliyim' derim.",
+          "scores": {
+            "STR": 2
+          },
+          "flags": [],
+          "note": "DERS duyguları kabul etmeme (nonacceptance)."
+        },
+        {
+          "key": "E",
+          "text": "Duygu çok hızlı ve çok şiddetli geliyor; sıfırdan yüze saniyeler içinde çıkıyorum.",
+          "scores": {
+            "EMR": 2
+          },
+          "flags": [],
+          "note": "Yüksek duygusal reaktivite; düşük eşik."
+        }
+      ]
+    },
+    {
+      "id": "EDR-02",
+      "domain": "DDR",
+      "tier": "core",
+      "title": "Tonun değişmesi",
+      "scenario": "Yakın olduğun biri her zamankinden daha kısa ve mesafeli cevaplar vermeye başladı. Somut bir sebep yok.",
+      "gate": null,
+      "show_if": null,
+      "options": [
+        {
+          "key": "A",
+          "text": "Yorgundur der, üzerinde durmam.",
+          "scores": {},
+          "flags": [],
+          "note": "Güvenli bağlanma."
+        },
+        {
+          "key": "B",
+          "text": "Sorarım, konuşurum, netleştiririm.",
+          "scores": {},
+          "flags": [],
+          "note": "Uyumsal ilişkisel strateji."
+        },
+        {
+          "key": "C",
+          "text": "İçimde hemen 'bir şey yaptım, bana kızdı' alarmı çalar; doğrulayana kadar rahat edemem.",
+          "scores": {
+            "FOA": 2,
+            "EMR": 1
+          },
+          "flags": [],
+          "note": "Reddedilme hassasiyeti (RSD) — ADHD ve Sosyal Anksiyete ile örtüşebilir."
+        },
+        {
+          "key": "D",
+          "text": "Ben de soğurum ve geri çekilirim; 'önce o yaklaşsın' derim.",
+          "scores": {
+            "FOA": 1,
+            "EMR": 1
+          },
+          "flags": [],
+          "note": "Önleyici terk etme (preemptive withdrawal)."
+        },
+        {
+          "key": "E",
+          "text": "Bu his beni öyle sarar ki o gün başka hiçbir işe odaklanamam.",
+          "scores": {
+            "FOA": 2,
+            "EMR": 1,
+            "FUN": 2
+          },
+          "flags": [],
+          "note": "İlişkisel tetikleyicinin işlevi tamamen bloke etmesi."
+        }
+      ]
+    },
+    {
+      "id": "EDR-03",
+      "domain": "DDR",
+      "tier": "core",
+      "title": "Sıkıntı anındaki eylem",
+      "scenario": "Yoğun bir duygusal sıkıntı anındasın. O anki tipik davranışın hangisi?",
+      "gate": null,
+      "show_if": null,
+      "options": [
+        {
+          "key": "A",
+          "text": "Sakinleşmek için nefes, yürüyüş, konuşma gibi bildiğim yollara giderim.",
+          "scores": {},
+          "flags": [],
+          "note": "Etkin başa çıkma repertuvarı."
+        },
+        {
+          "key": "B",
+          "text": "O an beni rahatlatacağını bildiğim ama sonradan zarar göreceğim ani kararlar alırım: ani mesaj, ani ayrılık, ani istifa.",
+          "scores": {
+            "IMP": 2,
+            "EMR": 1
+          },
+          "flags": [],
+          "note": "DERS dürtü kontrol güçlüğü; sıkıntının eylemle boşaltılması."
+        },
+        {
+          "key": "C",
+          "text": "Kontrolsüz harcama veya aşırı yeme gibi şeylerle bastırmaya çalışırım.",
+          "scores": {
+            "IMP": 2,
+            "STR": 1
+          },
+          "flags": [],
+          "note": "Dürtüsel regülasyon stratejisi."
+        },
+        {
+          "key": "D",
+          "text": "Kimseyle konuşmam, tamamen kapanırım; ne yapacağımı bilmediğim için hiçbir şey yapmam.",
+          "scores": {
+            "STR": 2
+          },
+          "flags": [],
+          "note": "DERS stratejilere sınırlı erişim (limited access to strategies)."
+        },
+        {
+          "key": "E",
+          "text": "Öfkemi çevremdekilere yansıtırım, sonrasında pişman olurum.",
+          "scores": {
+            "EMR": 2,
+            "IMP": 1
+          },
+          "flags": [],
+          "note": "Dışa vuran reaktivite + ikincil suçluluk."
+        }
+      ]
+    },
+    {
+      "id": "EDR-04",
+      "domain": "DDR",
+      "tier": "ext",
+      "title": "Uzun süre yalnız kalmak",
+      "scenario": "Kimseyle görüşmeden, tek başına uzun bir süre geçirdiğinde içinde ne olur?",
+      "gate": null,
+      "show_if": null,
+      "options": [
+        {
+          "key": "A",
+          "text": "Kendimle iyi vakit geçiririm.",
+          "scores": {},
+          "flags": [],
+          "note": "Stabil içsel dünya."
+        },
+        {
+          "key": "B",
+          "text": "Yalnızlık beni dinlendirir; sosyal borçtan kurtulmuş olurum.",
+          "scores": {},
+          "flags": [],
+          "note": "Otizm/içe dönüklük lehine — boşluk hissi içermiyor."
+        },
+        {
+          "key": "C",
+          "text": "İçimde tarifsiz bir boşluk açılır; doldurmak için sürekli bir şeye ihtiyaç duyarım: telefon, dizi, biri.",
+          "scores": {
+            "IDN": 2
+          },
+          "flags": [],
+          "note": "MSI-BPD kronik boşluk hissi."
+        },
+        {
+          "key": "D",
+          "text": "Kim olduğumu ve ne istediğimi tam bilemediğimi fark ederim; başkaları yokken tanımsız kalıyorum.",
+          "scores": {
+            "IDN": 2,
+            "FOA": 1
+          },
+          "flags": [],
+          "note": "Kimlik karmaşası; ötekine bağımlı psişik varoluş."
+        },
+        {
+          "key": "E",
+          "text": "Düşüncelerim beni yorar, sürekli meşgul olmam gerekir.",
+          "scores": {},
+          "flags": [],
+          "note": "YAB lehine (endişe kaçınması), kimlik boşluğu değil."
+        }
+      ]
+    },
+    {
+      "id": "EDR-05",
+      "domain": "DDR",
+      "tier": "ext",
+      "title": "İlişkilerin seyri",
+      "scenario": "Yakın ilişkilerinin yıllar içindeki genel seyri hangisine benziyor?",
+      "gate": null,
+      "show_if": null,
+      "options": [
+        {
+          "key": "A",
+          "text": "Uzun yıllardır aynı yakın çevrem var; ilişkiler istikrarlı.",
+          "scores": {},
+          "flags": [],
+          "note": "Stabil bağlanma örüntüsü."
+        },
+        {
+          "key": "B",
+          "text": "İnsanlarla mesafeli olurum, çok yakınlaşmam.",
+          "scores": {},
+          "flags": [],
+          "note": "Kaçınmacı örüntü / otizm — dalgalanma içermiyor."
+        },
+        {
+          "key": "C",
+          "text": "İlişkilerim çok yoğun başlar; kısa sürede aşırı yakınlaşırız, sonra bir kırılmayla tamamen biter.",
+          "scores": {
+            "FOA": 2,
+            "EMR": 1,
+            "IDN": 1
+          },
+          "flags": [],
+          "note": "Yoğun ve istikrarsız ilişki örüntüsü (MSI-BPD)."
+        },
+        {
+          "key": "D",
+          "text": "Aynı kişiye bir gün hayran olup ertesi gün hiç değer vermediğimi fark ederim.",
+          "scores": {
+            "EMR": 2,
+            "IDN": 2,
+            "FOA": 1
+          },
+          "flags": [],
+          "note": "Bölme (splitting): idealizasyon–değersizleştirme salınımı."
+        },
+        {
+          "key": "E",
+          "text": "Terk edilme ihtimalini sezdiğim anda, o gerçekleşmeden ben bitiririm.",
+          "scores": {
+            "FOA": 2,
+            "IMP": 1
+          },
+          "flags": [],
+          "note": "Terk edilmeyi önlemek için çılgınca çaba — tersine çevrilmiş biçimi."
+        }
+      ]
+    }
+  ],
+  "stage2_differentials": [
+    {
+      "id": "DX-E",
+      "title": "OKB vs. Yaygın Anksiyete",
+      "trigger": "OKB.OBS ≥ 60 VE YAB.WOR ≥ 60",
+      "mechanism": "İkisinde de zihin durmaz. Ayrım İÇERİKTE ve BİÇİMDE: YAB'de endişe gerçek hayat problemleri üzerine, dille/cümlelerle akar ve kişi bunu 'kendi düşüncem' olarak sahiplenir. OKB'de düşünce ego-distoniktir (bana ait değilmiş gibi), sıklıkla imge/dürtü biçimindedir ve bir nötralizasyon eylemi doğurur.",
+      "question": "Zihnini meşgul eden düşünceler için hangisi daha doğru?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Düşündüklerim gerçek hayat meseleleri: para, sağlık, iş, sevdiklerimin başına gelebilecekler. Bunlar benim düşüncelerim, sadece durduramıyorum.",
+          "target": "YAB — Worry"
+        },
+        {
+          "key": "B",
+          "text": "Aklıma gelen şey bana ait değilmiş gibi, saçma, hatta kim olduğuma tamamen ters. Geldiğinde onu etkisizleştirmek için bir şey yapmam veya bir şey düşünmem gerekiyor.",
+          "target": "OKB — Obsesyon + nötralizasyon"
+        },
+        {
+          "key": "C",
+          "text": "İkisi de var ama biri diğerinden çok daha baskın değil.",
+          "target": "Komorbid — her iki modül de açık bırakılır"
+        }
+      ]
+    },
+    {
+      "id": "DX-F",
+      "title": "Depresyon vs. Otistik Tükenmişlik vs. ADHD aktivasyon",
+      "trigger": "DEP.ENR ≥ 65 VE (OTZ.CAM ≥ 60 VEYA ADHD.AT ≥ 65)",
+      "mechanism": "Üçünde de 'yapamıyorum' var. Depresyonda ödül değeri düşmüştür (istemiyorum). Otistik tükenmişlikte kapasite tükenmiştir ve dinlenme+düşük uyaranla geri gelir. ADHD'de istek de kapasite de vardır, eksik olan aktivasyondur ve ilgi/aciliyet geldiğinde anında döner.",
+      "question": "Yapman gerekeni yapamadığın bir günde, o an içinde olan şeyi en iyi hangisi anlatıyor?",
+      "options": [
+        {
+          "key": "A",
+          "text": "İstek yok. Yapsam da bir şey hissetmeyeceğimi biliyorum; ödül tarafı kapanmış gibi.",
+          "target": "Depresyon — Anhedoni/Anerji"
+        },
+        {
+          "key": "B",
+          "text": "İstek var ama sistemim çökmüş; sessiz, karanlık ve yalnız bir yerde birkaç gün geçirirsem kapasitem geri geliyor.",
+          "target": "Otizm — Autistic burnout"
+        },
+        {
+          "key": "C",
+          "text": "İstek de var, enerji de var; başlayamıyorum. Son dakikada bir aciliyet oluşunca aynı iş bir anda mümkün hale geliyor.",
+          "target": "ADHD — Executive activation"
+        },
+        {
+          "key": "D",
+          "text": "O gün beni bir insan ilişkisi sarstı ve toparlanamadım.",
+          "target": "Duygu regülasyon — ilişkisel tetikleyici"
+        }
+      ]
+    },
+    {
+      "id": "DX-G",
+      "title": "Sosyal Anksiyete vs. Depresif Çekilme",
+      "trigger": "SOS.AVD ≥ 65 VE DEP.ANH ≥ 60",
+      "mechanism": "İkisinde de davet reddedilir. Sosyal anksiyetede İSTEK VARDIR, korku engeller — kişi gidememekten pişmanlık duyar. Depresif çekilmede istek yoktur; gitse de keyif alamayacaktır.",
+      "question": "Bir daveti reddettikten sonra, o akşam evdeyken içinde ne olur?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Keşke gidebilseydim diye hayıflanırım; korkum yüzünden kaçırdığım için kendime kızarım.",
+          "target": "Sosyal Anksiyete — istek korunmuş"
+        },
+        {
+          "key": "B",
+          "text": "Rahatlarım ama sonra hiçbir şey de yapmam; evde de bir şeyden keyif almam.",
+          "target": "Depresyon — anhedoni"
+        },
+        {
+          "key": "C",
+          "text": "Rahatlarım ve akşamımı gerçekten iyi geçiririm; sosyalleşmemek benim için kayıp değil.",
+          "target": "Otizm/içe dönüklük — kayıp algısı yok"
+        }
+      ]
+    },
+    {
+      "id": "DX-H",
+      "title": "Bipolar Spektrum vs. Sınır Duygusal İstikrarsızlık",
+      "trigger": "BIP.CYC ≥ 65 VE DDR.EMR ≥ 65",
+      "mechanism": "En kritik ve en sık karıştırılan ayrım. Bipolar duygudurum epizodu GÜNLER-HAFTALAR sürer, dış olaydan bağımsız başlar ve uyku/enerji/aktivite birlikte değişir. BPD dalgalanması SAATLER sürer, neredeyse her zaman ilişkisel bir tetikleyiciye bağlıdır ve uyku ihtiyacı azalmaz.",
+      "question": "Duygu durumunun değiştiği dönemleri düşün: SÜRE ve BAŞLANGIÇ hangisine benziyor?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Saatler içinde değişir. Neredeyse her seferinde birinin bana yaptığı/yapmadığı bir şeyle başlar. Kişi düzelirse ben de düzelirim.",
+          "target": "BPD — ilişkisel tetikleyici, saatlik döngü"
+        },
+        {
+          "key": "B",
+          "text": "Günlerce, bazen haftalarca sürer. Nasıl başladığını bilemem; kimse bir şey yapmamıştır. O dönemde uykum, enerjim ve ne kadar iş çıkardığım hep birlikte değişir.",
+          "target": "Bipolar — otonom epizot"
+        },
+        {
+          "key": "C",
+          "text": "İkisi de oluyor: hem ilişkisel fırtınalar hem de sebepsiz uzun dönemler.",
+          "target": "Komorbid olasılığı — ikisi de açık bırakılır"
+        }
+      ]
+    },
+    {
+      "id": "DX-I",
+      "title": "TSSB Hipervijilansı vs. Yaygın Anksiyete",
+      "trigger": "TSB.ARO ≥ 65 VE YAB.WOR ≥ 65",
+      "mechanism": "İkisinde de 'tetikte olma' vardır. YAB geleceğe dönüktür ve bilişseldir ('ya olursa'). TSSB geçmişe dönüktür ve bedenseldir: tehdit zaten yaşanmıştır, sinir sistemi hâlâ o ana göre kalibredir.",
+      "question": "Tetikte olduğun anlarda zihninde ne var?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Gelecekte olabilecek kötü şeylerin senaryoları; henüz olmamış ama olabilecek şeyler.",
+          "target": "YAB — anticipatory worry"
+        },
+        {
+          "key": "B",
+          "text": "Bir düşünce yok. Bedenim önce tepki veriyor, ne olduğunu sonra anlıyorum; genelde bir ses, koku veya görüntü tetikliyor.",
+          "target": "TSSB — somatik/duyusal tetiklenme"
+        },
+        {
+          "key": "C",
+          "text": "İkisi de; ama bedensel olan çok daha ani ve şiddetli.",
+          "target": "Karma tablo — TSSB önceliklendirilir"
+        }
+      ]
+    },
+    {
+      "id": "DX-J",
+      "title": "Unipolar Depresyon vs. Bipolar Depresyon",
+      "trigger": "DEP toplam ≥ 65 VE (BIP.HYP ≥ 45 VEYA BIP.SLD ≥ 45)",
+      "mechanism": "Sonuç ekranı yalnızca depresyon gösterirse, geçmişte hipomanik dönem bulunan bir kişi eksik yönlendirilmiş olur. Bu ayrım tarama ürününün en yüksek klinik değer ürettiği noktalardan biridir.",
+      "question": "Şu anki halinden bağımsız olarak, HAYATININ HERHANGİ BİR DÖNEMİNDE en az birkaç gün süren, az uykuyla dinç kaldığın ve normalinden belirgin şekilde hızlı/girişken olduğun bir dönem oldu mu?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Hayır, hiç olmadı.",
+          "target": "Unipolar örüntü"
+        },
+        {
+          "key": "B",
+          "text": "Evet, en az bir kez oldu ve çevremdekiler de fark etti.",
+          "target": "Bipolar spektrum sinyali — sonuç metnine eklenir"
+        },
+        {
+          "key": "C",
+          "text": "Emin değilim; iyi hissettiğim dönemleri 'normal' mi yoksa 'fazla' mı sayacağımı bilmiyorum.",
+          "target": "Belirsiz — profesyonel değerlendirme önerisi güçlendirilir"
+        }
+      ]
+    },
+    {
+      "id": "DX-K",
+      "title": "OKB Ritüeli vs. Otistik Rutin",
+      "trigger": "OKB.SYM ≥ 65 VE OTZ.RIG ≥ 65",
+      "mechanism": "Dışarıdan ikisi de 'değişmeyen düzen'dir. OKB ritüeli ANKSİYETEYİ AZALTMAK için yapılır; kişi genelde onu saçma bulur ve ondan kurtulmak ister. Otistik rutin ise ÖNGÖRÜLEBİLİRLİK VE HUZUR ÜRETİR; kişi onu sevmektedir, sorun yalnızca bozulduğunda çıkar.",
+      "question": "Değişmeyen düzenini/rutinini nasıl tanımlarsın?",
+      "options": [
+        {
+          "key": "A",
+          "text": "Yapmazsam kötü bir şey olacağı ya da içimin rahat etmeyeceği hissiyle yaparım. Aslında saçma olduğunu biliyorum ve keşke yapmak zorunda olmasam.",
+          "target": "OKB — anksiyete azaltıcı ritüel, ego-distonik"
+        },
+        {
+          "key": "B",
+          "text": "Rutinim benim düzenim; onu seviyorum ve iyi hissettiriyor. Sorun ancak biri onu bozduğunda çıkıyor.",
+          "target": "Otizm — öngörülebilirlik, ego-sintonik"
+        },
+        {
+          "key": "C",
+          "text": "Başlangıçta huzur veriyordu ama artık esiri gibiyim.",
+          "target": "Karma — her iki modül de açık bırakılır"
+        }
+      ]
+    }
+  ],
+  "cross_matching": [
+    {
+      "combo": "DEP-02-E + DEP-01-C + DEP-05-C",
+      "pattern": "İlgi bağımlı efor asimetrisi: ödül korunmuş, aktivasyon bozuk",
+      "bonus": "ADHD.AT +3, DEP.ENR −2",
+      "note": "Depresif anerji değil dopaminerjik efor eşiği. Depresyon skorunu DÜŞÜRÜR."
+    },
+    {
+      "combo": "OCD-01-D + OCD-04-D",
+      "pattern": "'Not just right' örüntüsünün iki farklı bağlamda tekrarı",
+      "bonus": "OKB.SYM +3",
+      "note": ""
+    },
+    {
+      "combo": "OCD-01-E + OCD-02-E",
+      "pattern": "Abartılmış sorumluluk temasının bağımsız senaryolarda tekrarı",
+      "bonus": "OKB.RSP +3",
+      "note": ""
+    },
+    {
+      "combo": "DEP-03-E + PTS-03-D",
+      "pattern": "Duygusal uyuşmanın hem depresif hem travmatik bağlamda görülmesi",
+      "bonus": "TSB.NCM +2, DEP.ANH +1",
+      "note": "Numbing atıfı TSSB'ye kaydırılır; DX-I tetiklenebilir."
+    },
+    {
+      "combo": "GAD-01-B + GAD-04-B",
+      "pattern": "Güvence arayışı döngüsünün tekrarı",
+      "bonus": "YAB.IUC +3",
+      "note": "OKB.COM ile ayrımı için DX-E önerilir."
+    },
+    {
+      "combo": "SAD-01-E + SAD-03-C",
+      "pattern": "Olay sonrası işlemlemenin iki bağımsız senaryoda tekrarı",
+      "bonus": "SOS.PEV +3",
+      "note": ""
+    },
+    {
+      "combo": "SAD-04-C + ASD-04-C",
+      "pattern": "Dışarıdan rahat görünürken içeride yüksek maliyet: maskeleme",
+      "bonus": "OTZ.CAM +3",
+      "note": "Sosyal anksiyeteden çok kompansasyon lehine; DX-C tetiklenir."
+    },
+    {
+      "combo": "ASD-01-C + ASD-04-C",
+      "pattern": "Algoritmik sosyal işlemleme + sonrasında kapanma",
+      "bonus": "OTZ.CAM +3, OTZ.FUN +1",
+      "note": ""
+    },
+    {
+      "combo": "ASD-03-A + ASD-03-D + PTS-02-B",
+      "pattern": "Duyusal intoleransın çoklu modalitede tekrarı",
+      "bonus": "OTZ.SEN +3",
+      "note": ""
+    },
+    {
+      "combo": "BIP-01-E + BIP-03-C",
+      "pattern": "Otonom döngü + azalmış uyku ihtiyacının birlikteliği",
+      "bonus": "BIP.CYC +3, BIP.SLD +2",
+      "note": "MDQ 'aynı dönemde birlikte' kriterinin karşılığı. DX-B ve DX-H tetiklenir."
+    },
+    {
+      "combo": "BIP-01-A + BIP-04-D",
+      "pattern": "Dış gözlemci doğrulaması + geriye dönük pişmanlık",
+      "bonus": "BIP.HYP +3",
+      "note": "En yüksek özgüllüklü kombinasyon."
+    },
+    {
+      "combo": "BIP-01-C + EDR-01-A + EDR-02-C",
+      "pattern": "Saatlik dalgalanma + ilişkisel tetikleyici",
+      "bonus": "DDR.EMR +3, BIP.CYC −2",
+      "note": "Bipolar döngü değil duygu regülasyon güçlüğü. DX-H zorunlu tetiklenir."
+    },
+    {
+      "combo": "EDR-02-E + EDR-05-C",
+      "pattern": "Reddedilme hassasiyetinin ilişki örüntüsüne dönüşmesi",
+      "bonus": "DDR.FOA +3",
+      "note": ""
+    },
+    {
+      "combo": "PTS-01-E + PTS-04-B/C/D",
+      "pattern": "Kaçınma + disosiyasyon birlikteliği",
+      "bonus": "TSB.DSC +3, TSB.AVT +1",
+      "note": "PCL-5 disosiyatif alt tip; sonuç metninde ayrıca belirtilir."
+    },
+    {
+      "combo": "PTS-02-C + GAD-02-A",
+      "pattern": "Hipervijilansın hem sosyal hem bedensel ölçümde görünmesi",
+      "bonus": "TSB.ARO +2",
+      "note": "DX-I tetiklenir."
+    },
+    {
+      "combo": "Herhangi 3 modülde FUN ≥ 2",
+      "pattern": "Çoklu alanda işlevsel etki",
+      "bonus": "GLOBAL.FUN +3",
+      "note": "Sonuç metninde 'birden fazla yaşam alanında etki' ifadesi açılır."
+    }
+  ],
+  "routing": "KATMAN 0 — Sabit çekirdek (35 soru)\n  ADHD 10 (mevcut matris) + core 25 = 35 soru. Herkese sorulur, sıra karıştırılır.\n\nKATMAN 1 — Koşullu genişletme (ext, 10 soru)\n  Bir modülün core sorularından herhangi birinde ≥2 ağırlık toplanmışsa o modülün ext sorusu açılır.\n    OKB     → OCD-04     (OBS+COM+SYM+DIS ≥ 3 ise)\n    DEP     → DEP-05     (NCG ≥ 2 ise)\n    YAB     → GAD-04     (WOR veya IUC ≥ 2 ise)\n    SOS     → SAD-04     (AVD ≥ 2 ise)\n    OTZ     → ASD-04, ASD-05  (CAM veya RIG veya SEN ≥ 2 ise)\n    BIP     → BIP-04     (CYC veya HYP ≥ 2 ise)\n    TSB     → PTS-04     (PTS_GATE açık VE (INR veya DSC ≥ 2) ise)\n    DDR     → EDR-04, EDR-05  (FOA veya EMR veya STR ≥ 2 ise)\n\nKATMAN 2 — Kapı kuralı\n  PTS-01 = A → PTS-02 ve PTS-03 atlanır. Ancak başka modüllerde ARO/DSC benzeri sinyal\n  (GAD-02-E, EDR-01-A, ASD-04-C) varsa PTS-04 yine de sorulur.\n\nKATMAN 3 — Ayırıcı tanı (Aşama 2)\n  Tetiklenen her DX senaryosu sorulur. Aynı anda en fazla 3 DX gösterilir;\n  fazlası varsa en yüksek çakışma skoruna sahip 3 tanesi seçilir. Sıralama:\n  DX-H > DX-J > DX-B > DX-A > DX-K > DX-F > DX-I > DX-E > DX-C > DX-D > DX-G\n\nTOPLAM UZUNLUK\n  Minimum: 35 soru (hiç sinyal yoksa)  •  Tipik: 40–45  •  Maksimum: 35 + 10 + 3 = 48\n  Ortalama tamamlama: 12–16 dakika.",
+  "safety_layer": "Gizli senaryo katmanında BİLİNÇLİ OLARAK intihar/kendine zarar maddesi YOKTUR. Sebebi:\nriskin senaryo içine gizlenmesi hem ölçüm hem de etik açıdan hatalıdır — risk doğrudan sorulur\nve doğrudan yönlendirilir.\n\nKONUMLANDIRMA\n  Testin SONUNDA, gizli puanlamadan tamamen ayrı, tek ekranlık doğrudan bir modül olarak sorulur.\n  Ekran başlığı nötr olmalı: \"Son bir soru\" değil, \"Güvenlik\" ne de dramatik bir başlık;\n  önerilen: \"Son bölüm — kendi iyiliğin için\"\n\nMADDE (PHQ-9 madde 9 karşılığı, doğrudan, gizli puanlamasız)\n  \"Son iki hafta içinde, yaşamak istemediğini ya da kendine zarar vermeyi düşündüğün oldu mu?\"\n    A) Hayır, hiç\n    B) Aklıma geldi ama üzerinde durmadım\n    C) Sık sık aklıma geliyor\n    D) Bu konuda bir şey yapmayı düşündüm\n\nTETİKLENME VE DAVRANIŞ\n  B  → sonuç ekranının en üstünde sabit destek kutusu.\n  C/D → sonuç ekranı GÖSTERİLMEDEN ÖNCE tam ekran destek sayfası. Skor daha sonra gösterilebilir\n        ama önce destek gelir. \"Devam et\" butonu bulunmalı, kilitlenmemeli.\n  Ayrıca DEP-05-E (umutsuzluk) + DEP-03-E (uyuşma) + EDR-03-B/C (dürtüsellik) kombinasyonu\n  da B seviyesindeki destek kutusunu açar.\n\nÜRÜN KURALLARI\n  • Yöntem, araç veya \"ne kadarı tehlikeli\" türü hiçbir bilgi hiçbir yerde bulunmasın.\n  • Sonuç ekranında hiçbir koşulda tanı etiketi kullanılmasın.\n  • \"Yüksek risk\", \"ciddi\", \"tehlikeli\" gibi alarmist dil yerine örüntü dili kullanılsın.\n  • Destek numaraları HARD-CODE EDİLMEMELİ; yayın öncesi ve periyodik olarak\n    T.C. Sağlık Bakanlığı ve Türkiye Psikiyatri Derneği kaynaklarından doğrulanmalı.\n    (Not: 182, MHRS randevu hattı olarak da kullanılıyor; kriz hattı olarak sunulmadan önce\n     güncel durumu mutlaka teyit et. 112 acil tıbbi durumlar için tartışmasız doğrudur.)\n  • KVKK: cevaplar sağlık verisi sayılır (özel nitelikli kişisel veri, KVKK m.6).\n    Açık rıza, ayrı aydınlatma metni ve tercihen anonim/istemci-tarafı skorlama gerekir.",
+  "scoring": "1) HAM PUAN\n   Eksen ham = Σ (seçilen şıkkın o eksendeki ağırlığı) + çapraz eşleşme bonusları\n\n2) NORMALİZASYON\n   Eksen skoru = (ham / o eksende alınabilecek teorik maksimum) × 100\n   ext sorular sorulmadıysa maksimum da düşer — payda dinamik hesaplanmalı,\n   yoksa kısa test alan kullanıcı yapay olarak yüksek skorlanır. (En sık yapılan hata budur.)\n\n3) MODÜL SKORU  (klinik ölçek yapısına göre ağırlıklı, eşit değil)\n   OKB = OBS×.25 + COM×.25 + SYM×.20 + RSP×.15 + DIS×.15\n   DEP = ANH×.30 + ENR×.25 + NCG×.30 + SLP×.15\n   YAB = WOR×.35 + TNS×.25 + IUC×.25 + IRR×.15\n   SOS = PRF×.30 + ITA×.30 + AVD×.25 + PEV×.15\n   OTZ = SEN×.25 + RIG×.25 + CAM×.30 + SCM×.20\n   BIP = HYP×.30 + CYC×.30 + SLD×.25 + RSK×.15\n   TSB = INR×.25 + AVT×.20 + ARO×.20 + NCM×.20 + DSC×.15\n   DDR = EMR×.30 + FOA×.25 + IMP×.20 + IDN×.15 + STR×.10\n\n4) İŞLEV ÇARPANI\n   FUN skoru < 20 ise modül skoru ×0.85 uygulanır.\n   Gerekçe: DSM'de her tanının ortak kriteri klinik olarak anlamlı sıkıntı/işlev bozukluğudur.\n   İşlev etkilenmiyorsa örüntü vardır ama klinik anlam zayıftır.\n\n5) EŞİKLER (prototip — valide edilmemiştir)\n   0–34   Belirgin örüntü yok\n   35–54  Zayıf/dağınık örüntü\n   55–74  Tutarlı örüntü — değerlendirme düşünülebilir\n   75–100 Güçlü ve çok eksenli örüntü — kapsamlı değerlendirme önerilir\n   Referans: PHQ-9'da 10 ham puan ≈ 37/100; PCL-5'te 33 ham puan ≈ 41/100;\n   DERS-16'da >51 ham ≈ 55/100; MSI-BPD'de 7/10 ≈ 70/100.\n\n6) GEÇERLİK KATMANI (yanıt seti tespiti)\n   • Tüm cevaplar aynı harf → sonuç gösterme, testi tekrarlat.\n   • Soru başına medyan süre < 3 sn → \"hızlı tamamlama\" uyarısı, skor güvenilirliği düşük etiketi.\n   • Aynı eksende zıt yönlü cevaplar (ör. BIP-03-C + BIP-03 karşıtı) → tutarlılık katsayısı düşürülür.\n   • Tutarlılık katsayısı 0.6–1.2 aralığında; aynı mekanizma farklı bağlamda tekrarlıyorsa artar."
+}

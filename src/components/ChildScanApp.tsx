@@ -53,17 +53,35 @@ function ChildPick({
   backLabel?: string;
   skipLabel?: string;
 }) {
+  const [flash, setFlash] = useState<number | null>(null);
+  const [locking, setLocking] = useState(false);
+
+  const pick = useCallback(
+    (index: number) => {
+      if (locking) return;
+      setLocking(true);
+      setFlash(index);
+      window.setTimeout(() => {
+        onConfirm(index);
+        setFlash(null);
+        setLocking(false);
+      }, 200);
+    },
+    [locking, onConfirm],
+  );
+
   return (
     <>
       <div className="opts" role="radiogroup">
         {options.map((text, index) => (
           <button
             key={`${questionId}-${index}`}
-            className="opt"
+            className={`opt${flash === index ? " opt-chosen" : ""}`}
             type="button"
             role="radio"
-            aria-checked={selected === index}
-            onClick={() => onConfirm(index)}
+            aria-checked={flash === index || selected === index}
+            disabled={locking}
+            onClick={() => pick(index)}
           >
             <span className="mark">{LETTERS[index]}</span>
             <span>{text}</span>

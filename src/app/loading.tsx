@@ -1,6 +1,7 @@
 export default function Loading() {
   return (
-    <main className="wrap" style={{ padding: "48px 0" }}>
+    <main className="wrap loading-screen">
+      <div className="loading-pulse" aria-hidden="true" />
       <p className="kicker">Yükleniyor</p>
     </main>
   );

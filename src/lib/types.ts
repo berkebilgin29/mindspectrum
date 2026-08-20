@@ -117,6 +117,12 @@ export type ScanState = {
   visualIndex: number;
   visual: VisualReport;
   audience: "adult" | "child";
+  /** Adaptif senaryo motoru: sorulacak soru kimlikleri sırası */
+  adaptiveQueue: string[];
+  /** Uygulanmış çapraz eşleşme kural kimlikleri */
+  crossMatchApplied: string[];
+  /** Gizli eksen puanları (geliştirme/ayırıcı tanı) */
+  axisScores: Record<string, number>;
 };
 
 export type DimensionResult = {

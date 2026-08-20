@@ -3,6 +3,17 @@ import { BASE_QUESTIONS_EN } from "@/data/baseQuestions.en";
 import { CHILD_QUESTIONS } from "@/data/childQuestions";
 import { CHILD_QUESTIONS_EN } from "@/data/childQuestions.en";
 import { DIFFERENTIAL_BRANCHES } from "@/data/differentialQuestions";
+import {
+  adaptiveMaxScores,
+  countAdaptiveAnswered,
+  getAdaptiveQuestion,
+  scoresFromAdaptiveAnswers,
+} from "@/lib/adaptive";
+import {
+  selectStage2Branches,
+  usesAdaptiveFlow,
+} from "@/lib/adaptive/selector";
+import { resolveBranch } from "@/lib/adaptive/stage2";
 import { effectiveOptions, SKIP_INDEX } from "@/lib/options";
 import { emptyVisual, visualMax, visualUsed } from "@/lib/visual";
 import type {
@@ -76,6 +87,9 @@ export function createInitialState(
     visualIndex: 0,
     visual: emptyVisual(),
     audience,
+    adaptiveQueue: [],
+    crossMatchApplied: [],
+    axisScores: {},
   };
 }
 
@@ -98,6 +112,9 @@ function maxFromWeightsList(lists: Weights[]): Scores {
 }
 
 export function maxFromBaseQuestions(state: ScanState): Scores {
+  if (usesAdaptiveFlow(state)) {
+    return adaptiveMaxScores(state);
+  }
   const max = emptyScores();
   const skipped = new Set(state.skipped);
   for (const question of questionBank(state.audience)) {
@@ -115,7 +132,7 @@ export function maxFromBaseQuestions(state: ScanState): Scores {
 export function maxFromBranches(branchIds: string[]): Scores {
   const max = emptyScores();
   for (const id of branchIds) {
-    const branch = DIFFERENTIAL_BRANCHES[id];
+    const branch = resolveBranch(id);
     if (!branch) continue;
     for (const question of branch.questions) {
       const local = maxFromWeightsList(question.options.map((o) => o.points));
@@ -164,6 +181,14 @@ function isMixedPair(
 }
 
 export function selectBranches(state: ScanState): string[] {
+  if (usesAdaptiveFlow(state)) {
+    const { moduleScores100 } = scoresFromAdaptiveAnswers(
+      state.answers,
+      state.crossMatchApplied,
+    );
+    return selectStage2Branches(state.axisScores, moduleScores100);
+  }
+
   const max = combinedMax({ ...state, branches: [] });
   const scores = state.scores;
   const ids: string[] = [];
@@ -212,8 +237,8 @@ export function buildResult(state: ScanState): EngineResult {
     .map((row) => row.id);
 
   const branchesUsed: DiffBranch[] = state.branches
-    .map((id) => DIFFERENTIAL_BRANCHES[id])
-    .filter(Boolean);
+    .map((id) => resolveBranch(id))
+    .filter((b): b is DiffBranch => Boolean(b));
 
   return {
     scores: state.scores,
@@ -231,7 +256,7 @@ export function currentDiffContext(state: ScanState): {
   questionIndex: number;
   totalInBranch: number;
 } | null {
-  const branch = DIFFERENTIAL_BRANCHES[state.branches[state.branchIndex]];
+  const branch = resolveBranch(state.branches[state.branchIndex]);
   if (!branch) return null;
   return {
     branch,
@@ -241,15 +266,40 @@ export function currentDiffContext(state: ScanState): {
 }
 
 export function totalQuestionCount(state: ScanState): number {
+  if (usesAdaptiveFlow(state)) {
+    const diffCount = state.branches.reduce((sum, id) => {
+      return sum + (resolveBranch(id)?.questions.length ?? 0);
+    }, 0);
+    const planned = Math.max(
+      state.adaptiveQueue.length,
+      countAdaptiveAnswered(state.answers),
+      33,
+    );
+    return Math.min(planned + diffCount, 48);
+  }
   const bank = questionBank(state.audience);
   const visual = state.audience === "adult" ? VISUAL_COUNT : 0;
   const diffCount = state.branches.reduce((sum, id) => {
-    return sum + (DIFFERENTIAL_BRANCHES[id]?.questions.length ?? 0);
+    return sum + (resolveBranch(id)?.questions.length ?? 0);
   }, 0);
   return bank.length + visual + diffCount;
 }
 
 export function answeredCount(state: ScanState): number {
+  if (usesAdaptiveFlow(state)) {
+    const visual = 0;
+    if (state.phase === "intro") return 0;
+    if (state.phase === "base") return state.baseIndex;
+    if (state.phase === "bridge") return countAdaptiveAnswered(state.answers) + visual;
+    if (state.phase === "diff") {
+      let prior = countAdaptiveAnswered(state.answers) + visual;
+      for (let i = 0; i < state.branchIndex; i += 1) {
+        prior += resolveBranch(state.branches[i])?.questions.length ?? 0;
+      }
+      return prior + state.diffQuestionIndex;
+    }
+    return totalQuestionCount(state);
+  }
   const bank = questionBank(state.audience);
   const visual = state.audience === "adult" ? VISUAL_COUNT : 0;
   if (state.phase === "intro") return 0;
@@ -259,7 +309,7 @@ export function answeredCount(state: ScanState): number {
   if (state.phase === "diff") {
     let prior = bank.length + visual;
     for (let i = 0; i < state.branchIndex; i += 1) {
-      prior += DIFFERENTIAL_BRANCHES[state.branches[i]]?.questions.length ?? 0;
+      prior += resolveBranch(state.branches[i])?.questions.length ?? 0;
     }
     return prior + state.diffQuestionIndex;
   }
@@ -276,4 +326,14 @@ export function crisisFlag(ranked: DimensionResult[]): boolean {
 
 export function isSkippedAnswer(index: number | undefined): boolean {
   return index === SKIP_INDEX;
+}
+
+export function currentAdaptiveQuestion(
+  state: ScanState,
+  lang: "tr" | "en" = "tr",
+) {
+  if (!usesAdaptiveFlow(state)) return null;
+  const id = state.adaptiveQueue[state.baseIndex];
+  if (!id) return null;
+  return getAdaptiveQuestion(id, lang) ?? null;
 }
