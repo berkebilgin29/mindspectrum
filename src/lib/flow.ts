@@ -6,7 +6,6 @@ import {
 } from "@/lib/adaptive/scoring";
 import {
   pickNextQuestionIds,
-  shouldCompleteAdaptive,
   usesAdaptiveFlow,
   validateQueue,
 } from "@/lib/adaptive/selector";
@@ -110,7 +109,12 @@ function afterBaseComplete(state: ScanState, answers: AnswerMap): ScanState {
     axisScores,
     crossMatchApplied,
   };
-  const branches = selectBranches(next);
+  let branches: string[] = [];
+  try {
+    branches = selectBranches(next);
+  } catch (error) {
+    console.error("MindSpectrum: selectBranches failed", error);
+  }
   return {
     ...next,
     branches,
@@ -143,49 +147,38 @@ function applyAdaptiveAnswer(
   const { scores, subtypeTags, axisScores, crossMatchApplied } =
     scoresFromAnswers(interim, answers);
 
-  if (ready.baseIndex >= adaptiveQueue.length - 1) {
-    const nextIds = pickNextQuestionIds({
-      ...interim,
-      scores,
-      axisScores,
-      crossMatchApplied,
-    });
-    adaptiveQueue = [...adaptiveQueue, ...nextIds];
-  }
-
-  const complete = shouldCompleteAdaptive({
+  const scored: ScanState = {
     ...interim,
     scores,
+    subtypeTags,
     axisScores,
     crossMatchApplied,
     adaptiveQueue,
-  });
-  const atEnd = ready.baseIndex >= adaptiveQueue.length - 1;
+  };
 
-  if (!complete || !atEnd) {
+  // Ortada: bir sonraki kuyruk maddesine geç
+  if (ready.baseIndex < adaptiveQueue.length - 1) {
     return {
-      ...interim,
-      scores,
-      subtypeTags,
-      axisScores,
-      crossMatchApplied,
-      adaptiveQueue,
+      ...scored,
       baseIndex: ready.baseIndex + 1,
       phase: "base",
     };
   }
 
-  return afterBaseComplete(
-    {
-      ...interim,
-      scores,
-      subtypeTags,
-      axisScores,
-      crossMatchApplied,
-      adaptiveQueue,
-    },
-    answers,
-  );
+  // Kuyruk sonu: koşullu ext / gated soruları ekle
+  const nextIds = pickNextQuestionIds(scored);
+  if (nextIds.length > 0) {
+    const extended = [...adaptiveQueue, ...nextIds];
+    return {
+      ...scored,
+      adaptiveQueue: extended,
+      baseIndex: ready.baseIndex + 1,
+      phase: "base",
+    };
+  }
+
+  // Sorulacak madde yok → Aşama 1 bitti (bridge veya sonuç)
+  return afterBaseComplete(scored, answers);
 }
 
 export function applyBaseAnswer(
@@ -229,52 +222,32 @@ export function applySkip(state: ScanState): ScanState {
     if (!adaptiveQuestion?.skippable) return state;
     const skipped = [...new Set([...ready.skipped, qid])];
     const answers = { ...ready.answers, [qid]: SKIP_INDEX };
-    let adaptiveQueue = [...ready.adaptiveQueue];
-    const interim = { ...ready, skipped, answers, adaptiveQueue };
+    const interim = { ...ready, skipped, answers };
     const { scores, subtypeTags, axisScores, crossMatchApplied } =
       scoresFromAnswers(interim, answers);
-
-    if (ready.baseIndex >= adaptiveQueue.length - 1) {
-      const nextIds = pickNextQuestionIds({
-        ...interim,
-        scores,
-        axisScores,
-        crossMatchApplied,
-      });
-      adaptiveQueue = [...adaptiveQueue, ...nextIds];
-    }
-
-    const complete = shouldCompleteAdaptive({
+    const scored: ScanState = {
       ...interim,
       scores,
+      subtypeTags,
       axisScores,
       crossMatchApplied,
-      adaptiveQueue,
-    });
-    const atEnd = ready.baseIndex >= adaptiveQueue.length - 1;
+      adaptiveQueue: [...ready.adaptiveQueue],
+    };
 
-    if (!complete || !atEnd) {
+    if (ready.baseIndex < scored.adaptiveQueue.length - 1) {
+      return { ...scored, baseIndex: ready.baseIndex + 1 };
+    }
+
+    const nextIds = pickNextQuestionIds(scored);
+    if (nextIds.length > 0) {
       return {
-        ...interim,
-        scores,
-        subtypeTags,
-        axisScores,
-        crossMatchApplied,
-        adaptiveQueue,
+        ...scored,
+        adaptiveQueue: [...scored.adaptiveQueue, ...nextIds],
         baseIndex: ready.baseIndex + 1,
       };
     }
-    return afterBaseComplete(
-      {
-        ...interim,
-        scores,
-        subtypeTags,
-        axisScores,
-        crossMatchApplied,
-        adaptiveQueue,
-      },
-      answers,
-    );
+
+    return afterBaseComplete(scored, answers);
   }
 
   const bank = questionBank(state.audience);

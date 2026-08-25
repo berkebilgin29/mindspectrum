@@ -52,7 +52,15 @@ export function ResultsView({
   );
   const [copied, setCopied] = useState(false);
 
-  const result = useMemo(() => (state ? buildResult(state) : null), [state]);
+  const result = useMemo(() => {
+    if (!state) return null;
+    try {
+      return buildResult(state);
+    } catch (error) {
+      console.error("MindSpectrum: buildResult failed", error);
+      return null;
+    }
+  }, [state]);
 
   if (!state || !result) {
     return (
@@ -74,7 +82,7 @@ export function ResultsView({
   const summary = result.ranked
     .map(
       (row) =>
-        `${dimMeta[row.id].label}: ${Math.round(row.ratio * 100)}% (${bandLabel[row.band]})`,
+        `${dimMeta[row.id]?.label ?? row.id}: ${Math.round(row.ratio * 100)}% (${bandLabel[row.band]})`,
     )
     .join("\n");
 
@@ -148,17 +156,18 @@ export function ResultsView({
       ) : null}
 
       <div className="bars" aria-label={d.results_bars_label}>
-        {result.ranked.map((row) => (
+            {result.ranked.map((row) => (
           <div className={`bar-row ${row.band}`} key={row.id}>
-            <strong>{dimMeta[row.id].short}</strong>
+            <strong>{dimMeta[row.id]?.short ?? row.id}</strong>
             <div className="bar-track">
               <div
                 className="bar-fill"
-                style={{ width: `${Math.round(row.ratio * 100)}%` }}
+                style={{ width: `${Math.round(Math.min(100, Math.max(0, row.ratio * 100)))}%` }}
               />
             </div>
             <span className="pct">
-              {Math.round(row.ratio * 100)}% · {bandLabel[row.band]}
+              {Math.round(Math.min(100, Math.max(0, row.ratio * 100)))}% ·{" "}
+              {bandLabel[row.band]}
             </span>
           </div>
         ))}
@@ -177,6 +186,7 @@ export function ResultsView({
       <div className="cards">
         {top.slice(0, 4).map((row) => {
           const condition = condData[row.id];
+          if (!condition) return null;
           return (
             <section className="card" key={row.id}>
               <p className="kicker">{condition.category}</p>
@@ -288,7 +298,7 @@ export function ResultsView({
           <tbody>
             {result.ranked.map((row) => (
               <tr key={row.id}>
-                <td>{dimMeta[row.id].label}</td>
+                <td>{dimMeta[row.id]?.label ?? row.id}</td>
                 <td>{row.score.toFixed(1)}</td>
                 <td>{row.max.toFixed(1)}</td>
                 <td>{Math.round(row.ratio * 100)}</td>

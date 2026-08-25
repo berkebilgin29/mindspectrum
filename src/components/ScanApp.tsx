@@ -154,13 +154,32 @@ export function ScanApp({ lang = "tr" }: { lang?: Lang }) {
 
   const persist = useCallback(
     (next: ScanState) => {
-      if (next.phase === "done") {
-        saveResult(next);
-        clearScan();
-        router.push(resultsPath);
-        return;
+      try {
+        if (next.phase === "done") {
+          const saved = saveResult(next);
+          if (!saved && typeof window !== "undefined") {
+            // Son çare: bellek + session yedeği zaten saveResult içinde;
+            // yine de sonuç sayfasına geç — getResultSnapshot bellekten okur.
+            console.warn("MindSpectrum: result storage write failed, using memory/session backup");
+          }
+          clearScan();
+          router.push(resultsPath);
+          return;
+        }
+        saveScan(next);
+      } catch (error) {
+        console.error("MindSpectrum: failed to persist scan", error);
+        // Tamamlama cevabı kaybolduysa bile sonuç üretmeyi dene
+        if (next.phase === "done") {
+          try {
+            saveResult(next);
+            clearScan();
+            router.push(resultsPath);
+          } catch {
+            // leave user on page with error UI below
+          }
+        }
       }
-      saveScan(next);
     },
     [router, resultsPath],
   );
@@ -329,6 +348,42 @@ export function ScanApp({ lang = "tr" }: { lang?: Lang }) {
   }
 
   if (!current) {
+    // Kuyruk taşması / bozuk oturum: cevaplar varsa sonucu kurtarmaya çalış
+    if (
+      state.phase === "base" &&
+      Object.keys(state.answers).length > 0 &&
+      usesAdaptiveFlow(state)
+    ) {
+      return (
+        <section className="sheet bridge">
+          <p className="kicker">{d.bridge_kicker}</p>
+          <h1>{lang === "en" ? "Almost done" : "Neredeyse bitti"}</h1>
+          <p className="lede">
+            {lang === "en"
+              ? "Your answers are saved. Continue to see your profile."
+              : "Cevaplarınız kayıtlı. Spektrum profilinizi görmek için devam edin."}
+          </p>
+          <div className="intake-actions">
+            <button
+              className="btn"
+              type="button"
+              onClick={() =>
+                persist({
+                  ...state,
+                  phase: "done",
+                  branches: state.branches,
+                })
+              }
+            >
+              {lang === "en" ? "See results" : "Sonuçları gör"}
+            </button>
+            <button className="btn btn-ghost" type="button" onClick={() => clearScan()}>
+              {d.error_retry}
+            </button>
+          </div>
+        </section>
+      );
+    }
     return (
       <section className="sheet bridge">
         <p className="kicker">{d.error_h1}</p>

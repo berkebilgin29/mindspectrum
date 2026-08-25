@@ -168,14 +168,16 @@ export function shouldCompleteAdaptive(state: ScanState): boolean {
   const next = pickNextQuestionIds(state);
   if (next.length > 0) return false;
 
-  // Kuyrukta henüz sorulmamış core kaldıysa bitirme
+  // Kuyrukta henüz sorulmamış madde kaldıysa bitirme
   const asked = askedSet(state.answers);
   const remainingInQueue = state.adaptiveQueue.some(
     (id, i) => i > state.baseIndex && !asked.has(id),
   );
   if (remainingInQueue) return false;
 
-  return total >= MIN_ADAPTIVE_QUESTIONS;
+  // Kuyruk tükendi — minimuma ulaşılmasa bile (edge case) tamamlanabilir;
+  // asıl güvence flow'da "at end + no next → finish" kuralıdır.
+  return total >= Math.min(MIN_ADAPTIVE_QUESTIONS, state.adaptiveQueue.length);
 }
 
 export function usesAdaptiveFlow(state: ScanState): boolean {

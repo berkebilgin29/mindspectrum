@@ -4,6 +4,7 @@ import type { ScanState } from "@/lib/types";
 
 const SCAN_KEY = "mindspectrum-scan-v2";
 const RESULT_KEY = "mindspectrum-result-v2";
+const RESULT_BACKUP_KEY = "mindspectrum-result-backup-v2";
 
 export const EMPTY_SCAN: ScanState = {
   phase: "intro",
@@ -53,12 +54,31 @@ function readItem(key: string): string | null {
   }
 }
 
-function writeItem(key: string, value: string | null) {
+function writeItem(key: string, value: string | null): boolean {
   try {
     if (value === null) window.localStorage.removeItem(key);
     else window.localStorage.setItem(key, value);
+    return true;
   } catch {
-    // private mode / quota
+    return false;
+  }
+}
+
+function writeSession(key: string, value: string | null): boolean {
+  try {
+    if (value === null) window.sessionStorage.removeItem(key);
+    else window.sessionStorage.setItem(key, value);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function readSession(key: string): string | null {
+  try {
+    return window.sessionStorage.getItem(key);
+  } catch {
+    return null;
   }
 }
 
@@ -95,6 +115,9 @@ function parseResult(raw: string | null): ScanState | null {
           skipped: parsed.skipped ?? [],
           visual: parsed.visual ?? emptyVisual(),
           audience: parsed.audience ?? "adult",
+          adaptiveQueue: parsed.adaptiveQueue ?? [],
+          crossMatchApplied: parsed.crossMatchApplied ?? [],
+          axisScores: parsed.axisScores ?? {},
         }
       : null;
   } catch {
@@ -131,10 +154,17 @@ export function getScanServerSnapshot(): ScanState {
 
 export function getResultSnapshot(): ScanState | null {
   if (typeof window === "undefined") return null;
-  const raw = readItem(RESULT_KEY);
+  const raw =
+    readItem(RESULT_KEY) ??
+    readSession(RESULT_BACKUP_KEY) ??
+    readSession(RESULT_KEY);
+  // localStorage yazımı başarısız olsa bile bellek/session yedeğini koru
+  if (raw === null && resultSnapshot) return resultSnapshot;
   if (raw === resultRaw) return resultSnapshot;
   resultRaw = raw;
-  resultSnapshot = parseResult(raw);
+  const parsed = parseResult(raw);
+  if (parsed) resultSnapshot = parsed;
+  else if (!resultSnapshot) resultSnapshot = null;
   return resultSnapshot;
 }
 
@@ -165,18 +195,34 @@ export function clearScan() {
   scanListeners.forEach((listener) => listener());
 }
 
-export function saveResult(state: ScanState) {
+export function saveResult(state: ScanState): boolean {
+  const raw = JSON.stringify(state);
   resultSnapshot = state;
-  resultRaw = JSON.stringify(state);
-  if (typeof window !== "undefined") writeItem(RESULT_KEY, resultRaw);
-  pushHistory(state);
+  resultRaw = raw;
+  let ok = true;
+  if (typeof window !== "undefined") {
+    const localOk = writeItem(RESULT_KEY, raw);
+    const sessionOk =
+      writeSession(RESULT_BACKUP_KEY, raw) || writeSession(RESULT_KEY, raw);
+    ok = localOk || sessionOk;
+  }
+  try {
+    pushHistory(state);
+  } catch {
+    // geçmiş yazılamasa bile sonuç ekranı bozulmasın
+  }
   resultListeners.forEach((listener) => listener());
+  return ok;
 }
 
 export function clearResult() {
   resultSnapshot = null;
   resultRaw = null;
-  if (typeof window !== "undefined") writeItem(RESULT_KEY, null);
+  if (typeof window !== "undefined") {
+    writeItem(RESULT_KEY, null);
+    writeSession(RESULT_BACKUP_KEY, null);
+    writeSession(RESULT_KEY, null);
+  }
   resultListeners.forEach((listener) => listener());
 }
 
@@ -259,10 +305,14 @@ export function getChildScanServerSnapshot(): ScanState {
 
 export function getChildResultSnapshot(): ScanState | null {
   if (typeof window === "undefined") return null;
-  const raw = readItem(CHILD_RESULT_KEY);
+  const raw =
+    readItem(CHILD_RESULT_KEY) ?? readSession(`backup:${CHILD_RESULT_KEY}`);
+  if (raw === null && childResultSnapshot) return childResultSnapshot;
   if (raw === childResultRaw) return childResultSnapshot;
   childResultRaw = raw;
-  childResultSnapshot = parseResult(raw);
+  const parsed = parseResult(raw);
+  if (parsed) childResultSnapshot = parsed;
+  else if (!childResultSnapshot) childResultSnapshot = null;
   return childResultSnapshot;
 }
 
@@ -293,12 +343,23 @@ export function clearChildScan() {
   childScanListeners.forEach((listener) => listener());
 }
 
-export function saveChildResult(state: ScanState) {
+export function saveChildResult(state: ScanState): boolean {
+  const raw = JSON.stringify(state);
   childResultSnapshot = state;
-  childResultRaw = JSON.stringify(state);
-  if (typeof window !== "undefined") writeItem(CHILD_RESULT_KEY, childResultRaw);
-  pushHistory(state);
+  childResultRaw = raw;
+  let ok = true;
+  if (typeof window !== "undefined") {
+    const localOk = writeItem(CHILD_RESULT_KEY, raw);
+    const sessionOk = writeSession(`backup:${CHILD_RESULT_KEY}`, raw);
+    ok = localOk || sessionOk;
+  }
+  try {
+    pushHistory(state);
+  } catch {
+    // ignore
+  }
   childResultListeners.forEach((listener) => listener());
+  return ok;
 }
 
 export function clearChildResult() {

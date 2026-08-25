@@ -152,7 +152,10 @@ export function normalizeAxes(
   const keys = new Set([...Object.keys(raw), ...Object.keys(maxima)]);
   for (const key of keys) {
     const m = maxima[key] ?? 0;
-    out[key] = m > 0 ? Math.max(0, Math.min(100, (raw[key] ?? 0) / m) * 100) : 0;
+    out[key] =
+      m > 0
+        ? Math.max(0, Math.min(100, ((raw[key] ?? 0) / m) * 100))
+        : 0;
   }
   return out;
 }
