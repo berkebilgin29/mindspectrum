@@ -46,11 +46,64 @@ export function seededShuffle(ids: string[], seed: string): string[] {
   return arr;
 }
 
+export function requiredCoreIds(): string[] {
+  return [...ADHD_QUESTION_IDS, ...CORE_QUESTION_IDS];
+}
+
+/** Henüz cevaplanmamış zorunlu (ADHD+core) sorular */
+export function missingRequiredIds(answers: AnswerMap): string[] {
+  return requiredCoreIds().filter((id) => answers[id] === undefined);
+}
+
 export function buildInitialAdaptiveQueue(seed = "mindspectrum"): string[] {
-  return seededShuffle(
-    [...ADHD_QUESTION_IDS, ...CORE_QUESTION_IDS],
-    seed,
-  );
+  return seededShuffle(requiredCoreIds(), seed);
+}
+
+/**
+ * Kesilmiş / eski kısa kuyrukları onarır.
+ * Geri gidip cevap değişince kuyruğun slice edilmesiyle oluşan erken bitişi engeller.
+ */
+export function repairAdaptiveQueue(state: ScanState): ScanState {
+  const seed = state.startedAt || "mindspectrum";
+  const required = requiredCoreIds();
+  const queue = [...state.adaptiveQueue];
+  const inQueue = new Set(queue);
+
+  for (const id of required) {
+    if (!inQueue.has(id)) {
+      queue.push(id);
+      inQueue.add(id);
+    }
+  }
+
+  // Gated / ext daha önce eklenmişse koru; eksik zorunluları sona ekle
+  if (queue.length === state.adaptiveQueue.length) {
+    // Hiçbir şey eklenmediyse ama kuyruk boşsa sıfırdan kur
+    if (queue.length === 0) {
+      return {
+        ...state,
+        adaptiveQueue: buildInitialAdaptiveQueue(seed),
+        baseIndex: Math.min(state.baseIndex, 0),
+      };
+    }
+    return state;
+  }
+
+  return {
+    ...state,
+    adaptiveQueue: queue,
+    baseIndex: Math.min(state.baseIndex, Math.max(0, queue.length - 1)),
+  };
+}
+
+export function validateQueue(state: ScanState): ScanState {
+  if (state.adaptiveQueue.length === 0) {
+    return {
+      ...state,
+      adaptiveQueue: buildInitialAdaptiveQueue(state.startedAt || "mindspectrum"),
+    };
+  }
+  return repairAdaptiveQueue(state);
 }
 
 type ExtRule = {
@@ -148,9 +201,21 @@ export function pickNextQuestionIds(state: ScanState): string[] {
   if (total >= MAX_ADAPTIVE_QUESTIONS) return [];
 
   const pending = state.adaptiveQueue.filter(
-    (id, i) => i > state.baseIndex && !asked.has(id),
+    (id, i) => i > state.baseIndex && answersPending(id, asked),
   );
   if (pending.length > 0) return [];
+
+  // Zorunlu core/ADHD eksikse önce onları ekle (kesilmiş kuyruk onarımı)
+  const missingRequired = missingRequiredIds(state.answers).filter(
+    (id) => !state.adaptiveQueue.includes(id),
+  );
+  if (missingRequired.length > 0) return [missingRequired[0]];
+
+  const stillMissing = missingRequiredIds(state.answers);
+  if (stillMissing.length > 0) {
+    // Kuyrukta var ama henüz sorulmadı — pickNext yeni id eklemez; flow ilerlesin
+    return [];
+  }
 
   const gated = unlockedGatedCore(state.answers, asked);
   if (gated.length > 0) return [gated[0]];
@@ -161,23 +226,31 @@ export function pickNextQuestionIds(state: ScanState): string[] {
   return [];
 }
 
+function answersPending(id: string, asked: Set<string>): boolean {
+  return !asked.has(id);
+}
+
 export function shouldCompleteAdaptive(state: ScanState): boolean {
   const total = countAdaptiveAnswered(state.answers);
   if (total >= MAX_ADAPTIVE_QUESTIONS) return true;
 
+  // Zorunlu sorular bitmeden asla tamamlanma
+  if (missingRequiredIds(state.answers).length > 0) return false;
+
   const next = pickNextQuestionIds(state);
   if (next.length > 0) return false;
 
-  // Kuyrukta henüz sorulmamış madde kaldıysa bitirme
   const asked = askedSet(state.answers);
   const remainingInQueue = state.adaptiveQueue.some(
     (id, i) => i > state.baseIndex && !asked.has(id),
   );
   if (remainingInQueue) return false;
 
-  // Kuyruk tükendi — minimuma ulaşılmasa bile (edge case) tamamlanabilir;
-  // asıl güvence flow'da "at end + no next → finish" kuralıdır.
-  return total >= Math.min(MIN_ADAPTIVE_QUESTIONS, state.adaptiveQueue.length);
+  return total >= MIN_ADAPTIVE_QUESTIONS;
+}
+
+export function ensureQuestionExists(id: string): boolean {
+  return Boolean(ADAPTIVE_BY_ID[id]);
 }
 
 export function usesAdaptiveFlow(state: ScanState): boolean {
@@ -193,18 +266,6 @@ export function usesAdaptiveFlowFor(
 
 export function currentAdaptiveQuestionId(state: ScanState): string | null {
   return state.adaptiveQueue[state.baseIndex] ?? null;
-}
-
-export function validateQueue(state: ScanState): ScanState {
-  if (state.adaptiveQueue.length > 0) return state;
-  return {
-    ...state,
-    adaptiveQueue: buildInitialAdaptiveQueue(state.startedAt || "mindspectrum"),
-  };
-}
-
-export function ensureQuestionExists(id: string): boolean {
-  return Boolean(ADAPTIVE_BY_ID[id]);
 }
 
 /** Aşama 2 DX tetikleyicileri — eksen skorları 0–100 */

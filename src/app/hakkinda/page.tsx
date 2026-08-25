@@ -22,7 +22,7 @@ export default function HakkindaPage() {
           </p>
           <h2>Nasıl çalışır</h2>
           <p>
-            Birinci aşama sekiz boyutu tarar. İkinci aşama yalnızca örtüşen
+            Birinci aşama dokuz boyutu tarar. İkinci aşama yalnızca örtüşen
             skorlarda açılır: örneğin ertelemenin sıkılmadan mı yoksa şüpheden
             mi geldiği, sosyal yorgunluğun yargılanma korkusu mu yoksa duyusal
             yük mü olduğu.

@@ -9,7 +9,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "MindSpectrum — Two-stage adaptive psychological screening",
   description:
-    "Non-diagnostic psychological screening. Screens 8 dimensions without bias, separates overlapping symptoms. Answers stay on your device.",
+    "Non-diagnostic psychological screening. Screens 9 dimensions without bias, separates overlapping symptoms. Answers stay on your device.",
   alternates: {
     canonical: "/en",
     languages: { tr: "/" },
@@ -34,7 +34,7 @@ export default function EnHomePage() {
             Symptoms overlap. Let's trace the source.
           </h1>
           <p className="lede">
-            MindSpectrum is a two-stage adaptive engine that screens 8 psychological
+            MindSpectrum is a two-stage adaptive engine that screens 9 psychological
             dimensions without bias. It does not diagnose. It separates overlapping
             patterns — ADHD procrastination vs. OCD paralysis, social anxiety vs.
             sensory overload.

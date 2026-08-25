@@ -45,7 +45,7 @@ export default function OGImage() {
             maxWidth: 700,
           }}
         >
-          Çift aşamalı adaptif tarama · 8 psikolojik boyut
+          Çift aşamalı adaptif tarama · 9 psikolojik boyut
         </div>
         <div
           style={{

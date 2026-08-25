@@ -255,7 +255,7 @@ export const TR: Dict = {
   home_storage: "yalnızca bu cihaz",
   home_h1: "Belirtiler karışır. Kökenini ayıralım.",
   home_lede:
-    "MindSpectrum, 8 psikolojik boyutu önyargısız tarayan çift aşamalı bir adaptif motordur. Tanı koymaz. Örtüşen kalıpları — DEHB ertelemesi ile OKB kilitlenmesi, sosyal kaygı ile duyusal tükenme — birbirinden ayırır.",
+    "MindSpectrum, 9 psikolojik boyutu önyargısız tarayan çift aşamalı bir adaptif motordur. Tanı koymaz. Örtüşen kalıpları — DEHB ertelemesi ile OKB kilitlenmesi, sosyal kaygı ile duyusal tükenme — birbirinden ayırır.",
   home_children_link: "Çocuk tarama",
   home_how_h2: "İki aşama, tek oturum.",
   home_how_lede:
@@ -414,7 +414,7 @@ export const TR: Dict = {
     "MindSpectrum belirtileri birbirine karışan insanlar için tasarlandı. Amaç etiket yapmak değil; hekimle konuşulabilir net bir harita çıkarmak.",
   about_how_h2: "Nasıl çalışır",
   about_how_body:
-    "Birinci aşama sekiz boyutu tarar. İkinci aşama yalnızca örtüşen skorlarda açılır.",
+    "Birinci aşama dokuz boyutu tarar. İkinci aşama yalnızca örtüşen skorlarda açılır.",
   about_not_h2: "Ne değildir",
   about_not_body:
     "Klinik görüşme, psikometrik test bataryası veya tedavi planı değildir.",
@@ -513,7 +513,7 @@ export const EN: Dict = {
   home_storage: "this device only",
   home_h1: "Symptoms overlap. Let's trace the source.",
   home_lede:
-    "MindSpectrum is a two-stage adaptive engine that screens 8 psychological dimensions without bias. It does not diagnose. It separates overlapping patterns — ADHD procrastination vs. OCD paralysis, social anxiety vs. sensory overload.",
+    "MindSpectrum is a two-stage adaptive engine that screens 9 psychological dimensions without bias. It does not diagnose. It separates overlapping patterns — ADHD procrastination vs. OCD paralysis, social anxiety vs. sensory overload.",
   home_children_link: "Child screening",
   home_how_h2: "Two stages, one session.",
   home_how_lede:
@@ -672,7 +672,7 @@ export const EN: Dict = {
     "MindSpectrum was built for people whose symptoms overlap and blur together. The goal is not to label — it is to produce a clear map you can bring to a clinician.",
   about_how_h2: "How it works",
   about_how_body:
-    "Stage one screens eight dimensions. Stage two opens only on overlapping scores — for example whether procrastination comes from boredom or doubt, or whether social fatigue is fear of judgment or sensory load.",
+    "Stage one screens nine dimensions. Stage two opens only on overlapping scores — for example whether procrastination comes from boredom or doubt, or whether social fatigue is fear of judgment or sensory load.",
   about_not_h2: "What it is not",
   about_not_body:
     "Not a clinical interview, psychometric test battery, or treatment plan. Scale names show scientific grounding; no licensed instrument is administered.",

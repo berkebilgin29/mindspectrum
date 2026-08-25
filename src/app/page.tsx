@@ -34,7 +34,7 @@ export default function HomePage() {
             Belirtiler karışır. Kökenini ayıralım.
           </h1>
           <p className="lede">
-            MindSpectrum, 8 psikolojik boyutu önyargısız tarayan çift aşamalı
+            MindSpectrum, 9 psikolojik boyutu önyargısız tarayan çift aşamalı
             bir adaptif motordur. Tanı koymaz. Örtüşen kalıpları — DEHB
             ertelemesi ile OKB kilitlenmesi, sosyal kaygı ile duyusal tükenme —
             birbirinden ayırır.

@@ -5,6 +5,7 @@ import {
   scoresFromAdaptiveAnswers,
 } from "@/lib/adaptive/scoring";
 import {
+  missingRequiredIds,
   pickNextQuestionIds,
   usesAdaptiveFlow,
   validateQueue,
@@ -130,19 +131,40 @@ function applyAdaptiveAnswer(
 ): ScanState {
   const ready = validateQueue(state);
   const qid = ready.adaptiveQueue[ready.baseIndex];
-  if (!qid) return afterBaseComplete(ready, ready.answers);
-
-  const skipped = ready.skipped.filter((id) => id !== qid);
-  const answers = { ...ready.answers, [qid]: optionIndex };
-
-  let adaptiveQueue = [...ready.adaptiveQueue];
-  if (
-    ready.answers[qid] !== undefined &&
-    ready.answers[qid] !== optionIndex
-  ) {
-    adaptiveQueue = adaptiveQueue.slice(0, ready.baseIndex + 1);
+  if (!qid) {
+    // Kuyruk boş/taşmış — onarım sonrası hâlâ yoksa ve zorunlular bittiyse bitir
+    const repaired = validateQueue({
+      ...ready,
+      baseIndex: Math.min(ready.baseIndex, Math.max(0, ready.adaptiveQueue.length - 1)),
+    });
+    const still = repaired.adaptiveQueue[repaired.baseIndex];
+    if (!still) {
+      if (missingRequiredIds(repaired.answers).length === 0) {
+        return afterBaseComplete(repaired, repaired.answers);
+      }
+      const missing = missingRequiredIds(repaired.answers);
+      return {
+        ...repaired,
+        adaptiveQueue: [...repaired.adaptiveQueue, ...missing],
+        baseIndex: repaired.adaptiveQueue.length,
+        phase: "base",
+      };
+    }
+    return applyAdaptiveAnswer(repaired, optionIndex);
   }
 
+  const skipped = ready.skipped.filter((id) => id !== qid);
+
+  // İleri cevapları temizle (geri + yeniden cevap) — kuyruğu ASLA kesme
+  const answers: AnswerMap = { ...ready.answers, [qid]: optionIndex };
+  if (ready.answers[qid] !== undefined) {
+    for (let i = ready.baseIndex + 1; i < ready.adaptiveQueue.length; i += 1) {
+      const forwardId = ready.adaptiveQueue[i];
+      delete answers[forwardId];
+    }
+  }
+
+  const adaptiveQueue = [...ready.adaptiveQueue];
   const interim = { ...ready, skipped, answers, adaptiveQueue };
   const { scores, subtypeTags, axisScores, crossMatchApplied } =
     scoresFromAnswers(interim, answers);
@@ -156,7 +178,6 @@ function applyAdaptiveAnswer(
     adaptiveQueue,
   };
 
-  // Ortada: bir sonraki kuyruk maddesine geç
   if (ready.baseIndex < adaptiveQueue.length - 1) {
     return {
       ...scored,
@@ -165,19 +186,42 @@ function applyAdaptiveAnswer(
     };
   }
 
-  // Kuyruk sonu: koşullu ext / gated soruları ekle
+  // Kuyruk sonu: eksik zorunlu + gated + ext
   const nextIds = pickNextQuestionIds(scored);
   if (nextIds.length > 0) {
-    const extended = [...adaptiveQueue, ...nextIds];
     return {
       ...scored,
-      adaptiveQueue: extended,
+      adaptiveQueue: [...adaptiveQueue, ...nextIds],
       baseIndex: ready.baseIndex + 1,
       phase: "base",
     };
   }
 
-  // Sorulacak madde yok → Aşama 1 bitti (bridge veya sonuç)
+  // Zorunlu sorular bitmeden sonuç yok
+  const missing = missingRequiredIds(answers);
+  if (missing.length > 0) {
+    const toAdd = missing.filter((id) => !adaptiveQueue.includes(id));
+    if (toAdd.length > 0) {
+      return {
+        ...scored,
+        adaptiveQueue: [...adaptiveQueue, ...toAdd],
+        baseIndex: ready.baseIndex + 1,
+        phase: "base",
+      };
+    }
+    // Kuyrukta var ama index taşmış — başa sarılacak sonraki cevapsız
+    const nextIdx = adaptiveQueue.findIndex(
+      (id, i) => i >= ready.baseIndex && answers[id] === undefined,
+    );
+    if (nextIdx >= 0) {
+      return { ...scored, baseIndex: nextIdx, phase: "base" };
+    }
+    const anyMissing = adaptiveQueue.findIndex((id) => answers[id] === undefined);
+    if (anyMissing >= 0) {
+      return { ...scored, baseIndex: anyMissing, phase: "base" };
+    }
+  }
+
   return afterBaseComplete(scored, answers);
 }
 

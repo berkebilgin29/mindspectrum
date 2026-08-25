@@ -1,6 +1,6 @@
 /**
  * MindSpectrum — Stage 1: Comprehensive Roof Screening (English)
- * 8 psychological dimensions screened via 18 clinical-derived items.
+ * 9 psychological dimensions screened via clinical-derived items.
  */
 
 import type { BaseQuestion } from "@/lib/types";

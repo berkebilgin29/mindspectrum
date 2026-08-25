@@ -17,7 +17,7 @@ import {
   questionBank,
   totalQuestionCount,
 } from "@/lib/engine";
-import { buildInitialAdaptiveQueue, usesAdaptiveFlow } from "@/lib/adaptive/selector";
+import { buildInitialAdaptiveQueue, missingRequiredIds, usesAdaptiveFlow, validateQueue } from "@/lib/adaptive/selector";
 import { resolveBranch } from "@/lib/adaptive/stage2";
 import { DICTS, type Lang } from "@/lib/i18n/dict";
 import { effectiveOptions } from "@/lib/options";
@@ -348,34 +348,47 @@ export function ScanApp({ lang = "tr" }: { lang?: Lang }) {
   }
 
   if (!current) {
-    // Kuyruk taşması / bozuk oturum: cevaplar varsa sonucu kurtarmaya çalış
-    if (
-      state.phase === "base" &&
-      Object.keys(state.answers).length > 0 &&
-      usesAdaptiveFlow(state)
-    ) {
+    // Kuyruk taşması: zorunlu sorular eksikse onarıp devam et; asla erken "done" yapma
+    if (state.phase === "base" && usesAdaptiveFlow(state)) {
       return (
         <section className="sheet bridge">
           <p className="kicker">{d.bridge_kicker}</p>
-          <h1>{lang === "en" ? "Almost done" : "Neredeyse bitti"}</h1>
+          <h1>{lang === "en" ? "Session hiccup" : "Oturum kesildi"}</h1>
           <p className="lede">
             {lang === "en"
-              ? "Your answers are saved. Continue to see your profile."
-              : "Cevaplarınız kayıtlı. Spektrum profilinizi görmek için devam edin."}
+              ? "Your answers are saved. Continue the screening — it is not finished yet."
+              : "Cevaplarınız kayıtlı. Tarama bitmedi; kaldığınız yerden devam edin."}
           </p>
           <div className="intake-actions">
             <button
               className="btn"
               type="button"
-              onClick={() =>
+              onClick={() => {
+                const repaired = validateQueue(state);
+                const missing = missingRequiredIds(repaired.answers);
+                const queue =
+                  missing.length > 0
+                    ? [
+                        ...repaired.adaptiveQueue,
+                        ...missing.filter((id) => !repaired.adaptiveQueue.includes(id)),
+                      ]
+                    : repaired.adaptiveQueue;
+                const nextIndex = Math.min(
+                  repaired.baseIndex,
+                  Math.max(0, queue.length - 1),
+                );
+                const unanswered = queue.findIndex(
+                  (id, i) => i >= nextIndex && repaired.answers[id] === undefined,
+                );
                 persist({
-                  ...state,
-                  phase: "done",
-                  branches: state.branches,
-                })
-              }
+                  ...repaired,
+                  adaptiveQueue: queue,
+                  baseIndex: unanswered >= 0 ? unanswered : nextIndex,
+                  phase: "base",
+                });
+              }}
             >
-              {lang === "en" ? "See results" : "Sonuçları gör"}
+              {lang === "en" ? "Continue screening" : "Taramaya devam et"}
             </button>
             <button className="btn btn-ghost" type="button" onClick={() => clearScan()}>
               {d.error_retry}

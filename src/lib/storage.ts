@@ -2,9 +2,9 @@ import { buildResult, emptyScores } from "@/lib/engine";
 import { emptyVisual } from "@/lib/visual";
 import type { ScanState } from "@/lib/types";
 
-const SCAN_KEY = "mindspectrum-scan-v2";
-const RESULT_KEY = "mindspectrum-result-v2";
-const RESULT_BACKUP_KEY = "mindspectrum-result-backup-v2";
+const SCAN_KEY = "mindspectrum-scan-v3";
+const RESULT_KEY = "mindspectrum-result-v3";
+const RESULT_BACKUP_KEY = "mindspectrum-result-backup-v3";
 
 export const EMPTY_SCAN: ScanState = {
   phase: "intro",

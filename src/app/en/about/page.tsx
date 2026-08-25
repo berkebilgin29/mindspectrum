@@ -23,7 +23,7 @@ export default function EnAboutPage() {
           </p>
           <h2>How it works</h2>
           <p>
-            Stage one screens eight dimensions. Stage two opens only on
+            Stage one screens nine dimensions. Stage two opens only on
             overlapping scores — for example whether procrastination comes from
             boredom or doubt, or whether social fatigue is fear of judgment or
             sensory load.

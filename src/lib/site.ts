@@ -1,7 +1,7 @@
 export const SITE_NAME = "MindSpectrum";
 export const SITE_TAGLINE = "Çift aşamalı adaptif tarama";
 export const SITE_DESCRIPTION =
-  "Tanı koymayan psikolojik tarama. 8 boyutu önyargısız tarar, örtüşen belirtileri ayırır. Cevaplar cihazınızda kalır.";
+  "Tanı koymayan psikolojik tarama. 9 boyutu önyargısız tarar, örtüşen belirtileri ayırır. Cevaplar cihazınızda kalır.";
 
 export const SITE_URL = (
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://mindspectrum.app"

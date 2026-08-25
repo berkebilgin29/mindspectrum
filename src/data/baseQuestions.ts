@@ -1,7 +1,7 @@
 /**
  * MindSpectrum - 1. Aşama: Kapsamlı Çatı Tarama ve Genel Triyaj Soru Bankası
- * 8 temel psikolojik boyutu çok yönlü (dikkat, takıntı, duygudurum, kaygı, biyolojik ritim,
- * sosyal/duyusal işleme, duygu regülasyonu ve travma) tarayan 18 kapsamlı klinik soru.
+ * 9 temel psikolojik boyutu çok yönlü (dikkat, takıntı, duygudurum, kaygı, biyolojik ritim,
+ * sosyal/duyusal işleme, duygu regülasyonu, travma ve bipolar) tarayan kapsamlı klinik soru.
  */
 
 import type { BaseQuestion } from "@/lib/types";
