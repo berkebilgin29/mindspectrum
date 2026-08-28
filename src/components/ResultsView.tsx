@@ -174,6 +174,16 @@ export function ResultsView({
         ))}
       </div>
 
+      <div style={{ marginTop: "1.5rem", marginBottom: "1.5rem", textAlign: "center" }}>
+        <Link 
+          href={lang === "en" ? "/en/profile" : "/profil"} 
+          className="btn" 
+          style={{ width: "100%", justifyContent: "center", background: "var(--c-brand-alt)", color: "white" }}
+        >
+          {lang === "en" ? "Explore Your Detailed Cognitive Profile ->" : "Detaylı Kognitif Profilinize Göz Atın ->"}
+        </Link>
+      </div>
+
       {/* Comparative Analysis Block */}
       {(() => {
         const history = getHistorySnapshot();
