@@ -55,7 +55,7 @@ export function missingRequiredIds(answers: AnswerMap): string[] {
   return requiredCoreIds().filter((id) => answers[id] === undefined);
 }
 
-export function buildInitialAdaptiveQueue(seed = "mindspectrum"): string[] {
+export function buildInitialAdaptiveQueue(seed = "9spectrum"): string[] {
   return seededShuffle(requiredCoreIds(), seed);
 }
 
@@ -64,7 +64,7 @@ export function buildInitialAdaptiveQueue(seed = "mindspectrum"): string[] {
  * Geri gidip cevap değişince kuyruğun slice edilmesiyle oluşan erken bitişi engeller.
  */
 export function repairAdaptiveQueue(state: ScanState): ScanState {
-  const seed = state.startedAt || "mindspectrum";
+  const seed = state.startedAt || "9spectrum";
   const required = requiredCoreIds();
   const queue = [...state.adaptiveQueue];
   const inQueue = new Set(queue);
@@ -100,7 +100,7 @@ export function validateQueue(state: ScanState): ScanState {
   if (state.adaptiveQueue.length === 0) {
     return {
       ...state,
-      adaptiveQueue: buildInitialAdaptiveQueue(state.startedAt || "mindspectrum"),
+      adaptiveQueue: buildInitialAdaptiveQueue(state.startedAt || "9spectrum"),
     };
   }
   return repairAdaptiveQueue(state);

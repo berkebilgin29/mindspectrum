@@ -1,32 +1,36 @@
+import { JsonLd } from "@/components/JsonLd";
 import { SiteShell } from "@/components/Header";
-import { CONTACT_EMAIL } from "@/lib/site";
+import { CONTACT_EMAIL, SITE_NAME } from "@/lib/site";
+import { aboutPageJsonLd, pageMetadata } from "@/lib/seo";
 import Link from "next/link";
 import type { Metadata } from "next";
 
-export const metadata: Metadata = {
-  title: "About · MindSpectrum",
-  description: "What MindSpectrum is, how it works, and who it was designed for.",
-  alternates: { canonical: "/en/about", languages: { tr: "/hakkinda" } },
-};
+export const metadata: Metadata = pageMetadata({
+  lang: "en",
+  title: "About",
+  description: `What ${SITE_NAME} is: a calm, private, non-diagnostic psychological screen across nine dimensions. Built to map overlapping symptoms for clinician conversations.`,
+  trPath: "/hakkinda",
+  enPath: "/en/about",
+});
 
 export default function EnAboutPage() {
   return (
     <SiteShell current="about" lang="en">
+      <JsonLd data={aboutPageJsonLd("en")} />
       <main className="scales wrap">
         <article className="sheet report prose">
           <p className="kicker">About</p>
-          <h1>Calm, private, no diagnostic claims.</h1>
+          <h1>Calm, private, and free of diagnostic claims</h1>
           <p className="lede">
-            MindSpectrum was built for people whose symptoms overlap and blur
-            together. The goal is not to label — it is to produce a clear map
-            you can bring to a clinician.
+            {SITE_NAME} was built for people whose symptoms blur together. The
+            goal is not to label — it is to produce a clear map you can bring to
+            a clinician.
           </p>
           <h2>How it works</h2>
           <p>
-            Stage one screens nine dimensions. Stage two opens only on
-            overlapping scores — for example whether procrastination comes from
-            boredom or doubt, or whether social fatigue is fear of judgment or
-            sensory load.
+            Stage one screens nine dimensions. Stage two opens only when scores
+            overlap — for example whether delay comes from boredom or doubt, or
+            whether social fatigue is fear of judgment or sensory load.
           </p>
           <h2>What it is not</h2>
           <p>
@@ -37,9 +41,8 @@ export default function EnAboutPage() {
           <h2>Privacy</h2>
           <p>
             No account. Answers are not written to a server. The screening stays
-            in this browser's local storage; deletion is yours to do. Details in
-            the{" "}
-            <Link href="/en/privacy">privacy notice</Link>.
+            in this browser&apos;s local storage; you control deletion. Details
+            in the <Link href="/en/privacy">privacy notice</Link>.
           </p>
           <p>
             Contact: <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>

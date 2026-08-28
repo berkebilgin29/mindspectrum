@@ -2,9 +2,9 @@ import { buildResult, emptyScores } from "@/lib/engine";
 import { emptyVisual } from "@/lib/visual";
 import type { ScanState } from "@/lib/types";
 
-const SCAN_KEY = "mindspectrum-scan-v3";
-const RESULT_KEY = "mindspectrum-result-v3";
-const RESULT_BACKUP_KEY = "mindspectrum-result-backup-v3";
+const SCAN_KEY = "9spectrum-scan-v3";
+const RESULT_KEY = "9spectrum-result-v3";
+const RESULT_BACKUP_KEY = "9spectrum-result-backup-v3";
 
 export const EMPTY_SCAN: ScanState = {
   phase: "intro",
@@ -29,6 +29,31 @@ type Listener = () => void;
 
 const scanListeners = new Set<Listener>();
 const resultListeners = new Set<Listener>();
+
+async function syncResultToServer(state: ScanState) {
+  if (typeof window === "undefined") return;
+  try {
+    const result = buildResult(state);
+    const payload = {
+      audience: state.audience,
+      scores: result.ranked.reduce(
+        (acc, row) => ({ ...acc, [row.id]: row.ratio }),
+        {}
+      ),
+      branches_used: result.branchesUsed.map((b) => b.id),
+    };
+
+    fetch("/api/save-scan", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    }).catch(() => {
+      // sessizce yut
+    });
+  } catch (err) {
+    // sessizce yut
+  }
+}
 
 let scanRaw: string | null | undefined;
 let scanSnapshot: ScanState = EMPTY_SCAN;
@@ -208,6 +233,7 @@ export function saveResult(state: ScanState): boolean {
   }
   try {
     pushHistory(state);
+    syncResultToServer(state);
   } catch {
     // geçmiş yazılamasa bile sonuç ekranı bozulmasın
   }
@@ -236,9 +262,9 @@ export function clearAllLocalData() {
   historyRaw = null;
 }
 
-const CHILD_SCAN_KEY = "mindspectrum-child-scan-v1";
-const CHILD_RESULT_KEY = "mindspectrum-child-result-v1";
-const HISTORY_KEY = "mindspectrum-history-v1";
+const CHILD_SCAN_KEY = "9spectrum-child-scan-v1";
+const CHILD_RESULT_KEY = "9spectrum-child-result-v1";
+const HISTORY_KEY = "9spectrum-history-v1";
 
 export const EMPTY_CHILD_SCAN: ScanState = {
   ...EMPTY_SCAN,
@@ -355,6 +381,7 @@ export function saveChildResult(state: ScanState): boolean {
   }
   try {
     pushHistory(state);
+    syncResultToServer(state);
   } catch {
     // ignore
   }

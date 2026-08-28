@@ -3,7 +3,7 @@ import { HistoryView } from "@/components/HistoryView";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "History · MindSpectrum",
+  title: "History · 9spectrum",
   robots: { index: false, follow: false },
   alternates: { languages: { tr: "/gecmis" } },
 };

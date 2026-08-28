@@ -4,7 +4,8 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Adult screening",
-  description: "Two-stage adaptive psychological screening for adults. Not a diagnosis.",
+  description:
+    "Two-stage psychological screening for adults. About 12–20 minutes. Not a diagnosis. Answers stay on your device.",
   robots: { index: false, follow: false },
   alternates: { languages: { tr: "/tarama" } },
 };

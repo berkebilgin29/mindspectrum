@@ -3,7 +3,7 @@ export type A11yPrefs = {
   motion: boolean;
 };
 
-const KEY = "mindspectrum-a11y-v1";
+const KEY = "9spectrum-a11y-v1";
 const DEFAULT: A11yPrefs = { contrast: false, motion: false };
 const listeners = new Set<() => void>();
 let rawCache: string | null | undefined;

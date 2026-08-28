@@ -5,6 +5,7 @@ import { BAND_LABEL_EN, DIMENSION_META_EN } from "@/lib/dimensions.en";
 import { getHistorySnapshot, subscribeHistory } from "@/lib/storage";
 import type { DimensionId } from "@/lib/types";
 import type { Lang } from "@/lib/i18n/dict";
+import { HistoryChart } from "@/components/HistoryChart";
 import Link from "next/link";
 import { useSyncExternalStore } from "react";
 
@@ -39,12 +40,13 @@ export function HistoryView({ lang = "tr" }: { lang?: Lang }) {
   return (
     <article className="sheet report">
       <p className="kicker">{lang === "en" ? "History" : "Tekrar tarama"}</p>
-      <h1>{lang === "en" ? "Profiles on this device." : "Bu cihazdaki profiller."}</h1>
+      <h1>{lang === "en" ? "Profiles on this device" : "Bu cihazdaki profiller"}</h1>
       <p className="lede">
         {lang === "en"
           ? "Not a diagnosis. The line shows relative change over time in the same browser."
-          : "Tanı değildir. Çizgi, aynı tarayıcıda zaman içindeki göreli değişimdir."}
+          : "Tanı değildir. Çizgi, aynı tarayıcıda zaman içindeki göreli değişimi gösterir."}
       </p>
+      <HistoryChart entries={entries} lang={lang} />
       {entries.map((entry) => (
         <section className="card" key={entry.at}>
           <p className="scale">

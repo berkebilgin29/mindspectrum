@@ -19,6 +19,7 @@ import {
   getResultSnapshot,
   subscribeChildResult,
   subscribeResult,
+  getHistorySnapshot,
 } from "@/lib/storage";
 import Link from "next/link";
 import { useMemo, useState, useSyncExternalStore } from "react";
@@ -57,7 +58,7 @@ export function ResultsView({
     try {
       return buildResult(state);
     } catch (error) {
-      console.error("MindSpectrum: buildResult failed", error);
+      console.error("9spectrum: buildResult failed", error);
       return null;
     }
   }, [state]);
@@ -90,8 +91,8 @@ export function ResultsView({
     if (!result) return;
     const body = [
       lang === "en"
-        ? "MindSpectrum spectrum profile — not a diagnosis."
-        : "MindSpectrum spektrum profili — bu bir tanı değildir.",
+        ? "9spectrum profile — not a diagnosis."
+        : "9spectrum spektrum profili — bu bir tanı değildir.",
       kind === "child"
         ? lang === "en"
           ? "Parent form."
@@ -105,7 +106,7 @@ export function ResultsView({
         ? `\n${lang === "en" ? "Subtype" : "Alt tip"}: ${result.subtypeTags.join(", ")}`
         : "",
       result.branchesUsed.length
-        ? `\n${lang === "en" ? "Differential modules" : "Ayırıcı modüller"}: ${result.branchesUsed.map((b) => b.title).join("; ")}`
+        ? `\n${lang === "en" ? "Differential sections" : "Ayırıcı bölümler"}: ${result.branchesUsed.map((b) => b.title).join("; ")}`
         : "",
     ]
       .filter(Boolean)
@@ -172,6 +173,48 @@ export function ResultsView({
           </div>
         ))}
       </div>
+
+      {/* Comparative Analysis Block */}
+      {(() => {
+        const history = getHistorySnapshot();
+        // Since current test is saved, history[0] is current, history[1] is previous.
+        if (history.length > 1) {
+          const current = history[0];
+          const previous = history[1];
+          
+          // Let's find significant changes in top traits
+          const changes = current.ranked.slice(0, 3).map(row => {
+            const prevRow = previous.ranked.find(r => r.id === row.id);
+            if (!prevRow) return null;
+            const diff = Math.round((row.ratio - prevRow.ratio) * 100);
+            return { id: row.id, diff };
+          }).filter(Boolean) as { id: string, diff: number }[];
+
+          if (changes.length > 0) {
+            return (
+              <div className="note" style={{ marginTop: "1rem", background: "var(--c-bg-subtle)", padding: "1rem", borderRadius: "8px" }}>
+                <strong>{lang === "en" ? "Trend Analysis:" : "Trend Analizi:"}</strong>
+                <ul style={{ margin: "0.5rem 0 0 1.2rem", padding: 0 }}>
+                  {changes.map(c => {
+                    const absDiff = Math.abs(c.diff);
+                    if (absDiff < 5) {
+                      return <li key={c.id}>{dimMeta[c.id as keyof typeof dimMeta]?.label ?? c.id} skoru <strong>stabil</strong> kaldı.</li>;
+                    }
+                    const dir = c.diff > 0 ? (lang === "en" ? "increased by" : "artış gösterdi") : (lang === "en" ? "decreased by" : "düşüş gösterdi");
+                    const diffText = lang === "en" ? `${dir} ${absDiff}%` : `%${absDiff} ${dir}`;
+                    return (
+                      <li key={c.id}>
+                        {dimMeta[c.id as keyof typeof dimMeta]?.label ?? c.id} skoru son testinize göre <strong>{diffText}</strong>.
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            );
+          }
+        }
+        return null;
+      })()}
 
       {showCrisis ? (
         <aside className="crisis">
@@ -241,7 +284,16 @@ export function ResultsView({
 
       <SocialShare text={d.results_share_social} />
 
-      <div className="intake-actions no-print">
+      <section className="sheet report" style={{ marginTop: "2rem", padding: "1.5rem", background: "var(--c-bg-subtle)", border: "1px solid var(--c-border)" }}>
+        <h3>{lang === "en" ? "Track Your Progress" : "Gelişiminizi Takip Edin"}</h3>
+        <p style={{ marginTop: "0.5rem" }}>
+          {lang === "en" 
+            ? "Psychological traits (like ADHD) remain stable, while states (like anxiety or burnout) fluctuate. We recommend returning in 30 days to re-test and track your longitudinal profile on this device."
+            : "DEHB gibi psikolojik özellikler (trait) stabil kalırken, anksiyete ve tükenmişlik gibi durumlar (state) dalgalanır. Boyutsal profilinizin zaman içindeki değişimini görmek için 30 gün sonra tekrar test çözmenizi öneririz."}
+        </p>
+      </section>
+
+      <div className="intake-actions no-print" style={{ marginTop: "2rem" }}>
         <button className="btn" type="button" onClick={() => window.print()}>
           {d.results_btn_print}
         </button>

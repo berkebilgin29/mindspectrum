@@ -4,7 +4,7 @@ import { CONTACT_EMAIL, SITE_NAME, SITE_URL } from "@/lib/site";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Privacy · MindSpectrum",
+  title: "Privacy · 9spectrum",
   alternates: { canonical: "/en/privacy", languages: { tr: "/gizlilik" } },
 };
 

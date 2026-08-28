@@ -5,7 +5,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Contact · MindSpectrum",
+  title: "Contact · 9spectrum",
   alternates: { canonical: "/en/contact", languages: { tr: "/iletisim" } },
 };
 
@@ -20,7 +20,7 @@ export default function EnContactPage() {
             {EN.contact_lede}{" "}
             <Link href="/en/crisis">Crisis resources</Link>
           </p>
-          <p>{EN.contact_body.replace("MindSpectrum", SITE_NAME)}</p>
+          <p>{EN.contact_body.replace("9spectrum", SITE_NAME)}</p>
           <p>
             <a className="btn" href={`mailto:${CONTACT_EMAIL}`}>
               {CONTACT_EMAIL}

@@ -1,5 +1,5 @@
 /**
- * MindSpectrum — Stage 1: Comprehensive Roof Screening (English)
+ * 9spectrum — Stage 1: Comprehensive Roof Screening (English)
  * 9 psychological dimensions screened via clinical-derived items.
  */
 

@@ -5,7 +5,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Tarama",
   description:
-    "36 yazılı madde ve örtüşmede ayırıcı dallanma. 18+. Cevaplar cihazınızda kalır.",
+    "Dokuz boyutta iki aşamalı psikolojik tarama. Yaklaşık 12–20 dakika. 18+. Cevaplar cihazınızda kalır.",
   robots: { index: false, follow: true },
 };
 

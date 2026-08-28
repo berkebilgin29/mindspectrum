@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useSyncExternalStore } from "react";
 import {
+  clearScan,
   getResumeSnapshot,
   subscribeScan,
 } from "@/lib/storage";
@@ -15,13 +16,32 @@ export function StartActions({ lang = "tr" }: { lang?: Lang }) {
     () => false,
   );
 
+  const scanPath = lang === "en" ? "/en/scan" : "/tarama";
+  const freshPath = `${scanPath}?new=1`;
+  const scalesPath = lang === "en" ? "/en/scales" : "/olcekler";
+
   if (lang === "en") {
     return (
       <div className="intake-actions">
-        <Link className="btn" href="/en/scan">
-          {hasResume ? "Continue where you left off" : "Start screening"}
-        </Link>
-        <Link className="linkish" href="/en/scales">
+        {hasResume ? (
+          <>
+            <Link className="btn" href={scanPath}>
+              Continue where you left off
+            </Link>
+            <Link
+              className="btn btn-ghost"
+              href={freshPath}
+              onClick={() => clearScan()}
+            >
+              Start over
+            </Link>
+          </>
+        ) : (
+          <Link className="btn" href={freshPath} onClick={() => clearScan()}>
+            Start screening
+          </Link>
+        )}
+        <Link className="linkish" href={scalesPath}>
           View clinical scales →
         </Link>
       </div>
@@ -30,10 +50,25 @@ export function StartActions({ lang = "tr" }: { lang?: Lang }) {
 
   return (
     <div className="intake-actions">
-      <Link className="btn" href="/tarama">
-        {hasResume ? "Kaldığınız yerden devam edin" : "Taramayı başlat"}
-      </Link>
-      <Link className="linkish" href="/olcekler">
+      {hasResume ? (
+        <>
+          <Link className="btn" href={scanPath}>
+            Kaldığınız yerden devam edin
+          </Link>
+          <Link
+            className="btn btn-ghost"
+            href={freshPath}
+            onClick={() => clearScan()}
+          >
+            Yeniden başla
+          </Link>
+        </>
+      ) : (
+        <Link className="btn" href={freshPath} onClick={() => clearScan()}>
+          Taramayı başlat
+        </Link>
+      )}
+      <Link className="linkish" href={scalesPath}>
         Klinik ölçeklere bakın →
       </Link>
     </div>

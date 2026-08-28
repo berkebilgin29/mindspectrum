@@ -3,7 +3,7 @@ import { SITE_NAME } from "@/lib/site";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Legal notice · MindSpectrum",
+  title: "Legal notice · 9spectrum",
   alternates: { canonical: "/en/disclaimer", languages: { tr: "/yasal-uyari" } },
 };
 

@@ -52,8 +52,8 @@ export function ShareView({ lang = "tr" }: { lang?: Lang }) {
         <h1>{lang === "en" ? "Could not read link." : "Link okunamadı."}</h1>
         <p className="lede">
           {lang === "en"
-            ? "Share links stay in the browser and never go to a server. The link may be incomplete or corrupted."
-            : "Paylaşım adresi tarayıcıda, sunucuya gitmez. Eksik veya bozuk olabilir."}
+            ? "Share links stay in the browser and are never sent to a server. The link may be incomplete or corrupted."
+            : "Paylaşım bağlantısı tarayıcıda kalır; sunucuya gönderilmez. Eksik veya bozuk olabilir."}
         </p>
         <Link className="btn" href={homePath}>
           {lang === "en" ? "Home" : "Ana sayfa"}
@@ -65,7 +65,7 @@ export function ShareView({ lang = "tr" }: { lang?: Lang }) {
   return (
     <article className="sheet report">
       <p className="kicker">{lang === "en" ? "Shared profile · not a diagnosis" : "Paylaşılan profil · tanı değildir"}</p>
-      <h1>{lang === "en" ? "Clinician summary (read-only)." : "Klinisyen özeti (salt okunur)."}</h1>
+      <h1>{lang === "en" ? "Clinician summary (read-only)" : "Hekim özeti (salt okunur)"}</h1>
       <p className="lede">
         {data.a === "child"
           ? lang === "en" ? "Parent form." : "Ebeveyn formu."

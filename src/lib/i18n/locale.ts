@@ -1,8 +1,5 @@
 import type { Lang } from "./dict";
-
-export function isValidLang(v: unknown): v is Lang {
-  return v === "tr" || v === "en";
-}
+import { LANDING_PAGES, landingPath } from "@/lib/seo/landings";
 
 /** Maps TR slug routes to EN equivalents */
 export const TR_TO_EN: Record<string, string> = {
@@ -22,11 +19,18 @@ export const TR_TO_EN: Record<string, string> = {
   "/gizlilik": "/en/privacy",
   "/kullanim-sartlari": "/en/terms",
   "/yasal-uyari": "/en/disclaimer",
+  ...Object.fromEntries(
+    LANDING_PAGES.map((p) => [landingPath(p, "tr"), landingPath(p, "en")]),
+  ),
 };
 
 export const EN_TO_TR: Record<string, string> = Object.fromEntries(
   Object.entries(TR_TO_EN).map(([tr, en]) => [en, tr]),
 );
+
+export function isValidLang(v: unknown): v is Lang {
+  return v === "tr" || v === "en";
+}
 
 /** Alternate href for hreflang */
 export function alternatePath(currentPath: string, targetLang: Lang): string {

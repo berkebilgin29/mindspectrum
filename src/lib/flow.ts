@@ -114,7 +114,7 @@ function afterBaseComplete(state: ScanState, answers: AnswerMap): ScanState {
   try {
     branches = selectBranches(next);
   } catch (error) {
-    console.error("MindSpectrum: selectBranches failed", error);
+    console.error("9spectrum: selectBranches failed", error);
   }
   return {
     ...next,

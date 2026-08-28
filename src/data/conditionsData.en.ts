@@ -1,5 +1,5 @@
 /**
- * MindSpectrum — Clinical Condition Data Bank (English)
+ * 9spectrum — Clinical Condition Data Bank (English)
  * Structured according to DSM-5 and ICD-11 criteria.
  */
 

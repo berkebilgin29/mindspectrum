@@ -2,7 +2,7 @@
 
 import { useCallback, useSyncExternalStore } from "react";
 
-const CONSENT_KEY = "ms_cookie_consent";
+const CONSENT_KEY = "ns_cookie_consent";
 
 let listeners: (() => void)[] = [];
 function emit() {

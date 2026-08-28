@@ -3,7 +3,7 @@ import { ResultsView } from "@/components/ResultsView";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Child screening results · MindSpectrum",
+  title: "Child screening results · 9spectrum",
   robots: { index: false, follow: false },
   alternates: { languages: { tr: "/cocuklar/sonuc" } },
 };

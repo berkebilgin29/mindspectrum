@@ -1,49 +1,53 @@
 import { DIMENSION_META_EN } from "@/lib/dimensions.en";
+import { JsonLd } from "@/components/JsonLd";
 import { SiteShell } from "@/components/Header";
 import { StartActions } from "@/components/StartActions";
 import { DIMENSIONS } from "@/lib/types";
 import { AdSlot } from "@/components/AdSlot";
+import { EN } from "@/lib/i18n/dict";
+import { faqPageJsonLd, HOME_FAQ_EN, pageMetadata } from "@/lib/seo";
+import {
+  SITE_DESCRIPTION_EN,
+  SITE_KEYWORDS_EN,
+  SITE_TAGLINE_EN,
+} from "@/lib/site";
 import Link from "next/link";
 import type { Metadata } from "next";
 
-export const metadata: Metadata = {
-  title: "MindSpectrum — Two-stage adaptive psychological screening",
-  description:
-    "Non-diagnostic psychological screening. Screens 9 dimensions without bias, separates overlapping symptoms. Answers stay on your device.",
-  alternates: {
-    canonical: "/en",
-    languages: { tr: "/" },
-  },
-  openGraph: {
-    locale: "en_US",
-    alternateLocale: "tr_TR",
-  },
-};
+export const metadata: Metadata = pageMetadata({
+  lang: "en",
+  title: SITE_TAGLINE_EN,
+  description: SITE_DESCRIPTION_EN,
+  trPath: "/",
+  enPath: "/en",
+  keywords: SITE_KEYWORDS_EN,
+});
 
 export default function EnHomePage() {
   return (
     <SiteShell current="home" lang="en">
+      <JsonLd data={faqPageJsonLd([...HOME_FAQ_EN])} />
       <main className="home wrap">
         <section className="sheet intake">
           <div className="meta-row">
-            <span>Form <b>MS-01</b></span>
-            <span>Duration <b>15–25 min</b></span>
-            <span>Storage <b>this device only</b></span>
+            <span>
+              Form <b>MS-01</b>
+            </span>
+            <span>
+              Duration <b>{EN.home_duration}</b>
+            </span>
+            <span>
+              Storage <b>Anonymous (Server + Device)</b>
+            </span>
           </div>
-          <h1 className="display intake-title">
-            Symptoms overlap. Let's trace the source.
-          </h1>
-          <p className="lede">
-            MindSpectrum is a two-stage adaptive engine that screens 9 psychological
-            dimensions without bias. It does not diagnose. It separates overlapping
-            patterns — ADHD procrastination vs. OCD paralysis, social anxiety vs.
-            sensory overload.
-          </p>
+          <p className="kicker">Free · anonymous · not a diagnosis</p>
+          <h1 className="display intake-title">{EN.home_h1}</h1>
+          <p className="lede">{EN.home_lede}</p>
           <StartActions lang="en" />
           <p className="note" style={{ marginTop: 18 }}>
             Under 18? Use the separate parent form:{" "}
             <Link className="linkish" href="/en/children">
-              Child screening
+              {EN.home_children_link}
             </Link>
           </p>
           <div className="dims">
@@ -58,40 +62,59 @@ export default function EnHomePage() {
 
         <section className="how">
           <div>
-            <h2>Two stages, one session.</h2>
+            <h2>{EN.home_how_h2}</h2>
             <p className="lede" style={{ marginTop: 12 }}>
-              36 written items derived from clinical scale language.
-              &apos;Not sure&apos; options and skippable trauma items included.
-              Tap an option to move to the next question.
+              {EN.home_how_lede}
             </p>
           </div>
           <div>
             <div className="step">
-              <strong>1. Roof screen</strong>
-              ADHD, OCD, depression, generalised anxiety, bipolar spectrum,
-              autism/sensory profile, social anxiety, trauma and emotional
-              dysregulation — with richer items per dimension.
+              <strong>{EN.home_step1_title}</strong>
+              {EN.home_step1_body}
             </div>
             <div className="step">
-              <strong>2. Differential branching</strong>
-              Opens only when two dimensions are both elevated and close together.
+              <strong>{EN.home_step2_title}</strong>
+              {EN.home_step2_body}
             </div>
             <div className="step">
-              <strong>3. Spectrum profile</strong>
-              Tendency bars, uncertain band, clinician table, shareable link
-              (never leaves device) and scan history.
+              <strong>{EN.home_step3_title}</strong>
+              {EN.home_step3_body}
             </div>
           </div>
+        </section>
+
+        <section className="sheet report home-seo">
+          <h2>Frequently asked questions</h2>
+          <dl className="faq">
+            {HOME_FAQ_EN.map((item) => (
+              <div key={item.q}>
+                <dt>{item.q}</dt>
+                <dd>{item.a}</dd>
+              </div>
+            ))}
+          </dl>
+          <p style={{ marginTop: 24 }}>
+            <Link className="linkish" href="/en/scales">
+              Scale references
+            </Link>
+            {" · "}
+            <Link className="linkish" href="/en/faq">
+              Full FAQ
+            </Link>
+          </p>
         </section>
 
         <AdSlot slot="home-mid-en" format="horizontal" />
 
         <p className="note">
-          This tool does not replace a medical diagnosis, treatment, or emergency
-          intervention.{" "}
-          <Link className="linkish" href="/en/disclaimer">Legal notice</Link>
+          {EN.home_legal_note}{" "}
+          <Link className="linkish" href="/en/disclaimer">
+            {EN.home_legal_link}
+          </Link>
           {" · "}
-          <Link className="linkish" href="/en/crisis">Crisis resources</Link>
+          <Link className="linkish" href="/en/crisis">
+            {EN.home_crisis_link}
+          </Link>
           {" · "}
           Source scales (not an official administration): ASRS-v1.1, OCI-R &
           Y-BOCS, PHQ-9, GAD-7, MDQ, AQ-10 & CAT-Q, LSAS, PCL-5, DERS &

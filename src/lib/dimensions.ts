@@ -21,8 +21,8 @@ export const DIMENSION_META: Record<
   },
   trauma_ptsd: { label: "Travma / TSSB", short: "Travma", group: "Travma" },
   bpd_emotional: {
-    label: "Duygusal düzensizlik",
-    short: "Duygu",
+    label: "Duygu regülasyonu",
+    short: "Duygu reg.",
     group: "Regülasyon",
   },
 };

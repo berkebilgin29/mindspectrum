@@ -22,7 +22,7 @@ export default function KullanimSartlariPage() {
           <h2>Kabul edilebilir kullanım</h2>
           <p>
             Siteyi yasalara uygun, başkalarının güvenliğini tehlikeye atmadan
-            kullanın. Motoru kopyalayıp tanı iddiasıyla satmak veya resmi test
+            kullanın. Yazılımı kopyalayıp tanı iddiasıyla satmak veya resmi test
             gibi sunmak yasaktır.
           </p>
           <h2>İçerik</h2>

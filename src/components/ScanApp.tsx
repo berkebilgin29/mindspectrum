@@ -151,6 +151,17 @@ export function ScanApp({ lang = "tr" }: { lang?: Lang }) {
   const [paused, setPaused] = useState(false);
   const [ageOk, setAgeOk] = useState(false);
   const [crisisOk, setCrisisOk] = useState(false);
+  const [legalOk, setLegalOk] = useState(false);
+  const legalPath = lang === "en" ? "/en/disclaimer" : "/yasal-uyari";
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("new") === "1") {
+      clearScan();
+      window.history.replaceState({}, "", window.location.pathname);
+    }
+  }, []);
 
   const persist = useCallback(
     (next: ScanState) => {
@@ -160,7 +171,7 @@ export function ScanApp({ lang = "tr" }: { lang?: Lang }) {
           if (!saved && typeof window !== "undefined") {
             // Son çare: bellek + session yedeği zaten saveResult içinde;
             // yine de sonuç sayfasına geç — getResultSnapshot bellekten okur.
-            console.warn("MindSpectrum: result storage write failed, using memory/session backup");
+            console.warn("9spectrum: result storage write failed, using memory/session backup");
           }
           clearScan();
           router.push(resultsPath);
@@ -168,7 +179,7 @@ export function ScanApp({ lang = "tr" }: { lang?: Lang }) {
         }
         saveScan(next);
       } catch (error) {
-        console.error("MindSpectrum: failed to persist scan", error);
+        console.error("9spectrum: failed to persist scan", error);
         // Tamamlama cevabı kaybolduysa bile sonuç üretmeyi dene
         if (next.phase === "done") {
           try {
@@ -196,8 +207,8 @@ export function ScanApp({ lang = "tr" }: { lang?: Lang }) {
         selected: state.answers[question.id],
         stageLabel:
           lang === "en"
-            ? "Stage 1 · Adaptive screening"
-            : "1. Aşama · Adaptif senaryo taraması",
+            ? "Stage 1 · General screening"
+            : "1. aşama · Genel tarama",
         questionId: question.id,
         skippable: question.skippable,
       };
@@ -212,7 +223,10 @@ export function ScanApp({ lang = "tr" }: { lang?: Lang }) {
         subtitle: question.subtitle,
         options: effectiveOptions(question).map((option) => option.text),
         selected: state.answers[question.id],
-        stageLabel: "1. Aşama · Çatı tarama",
+        stageLabel:
+          lang === "en"
+            ? "Stage 1 · General screening"
+            : "1. aşama · Genel tarama",
         questionId: question.id,
         skippable: question.skippable,
       };
@@ -228,7 +242,10 @@ export function ScanApp({ lang = "tr" }: { lang?: Lang }) {
         subtitle: ctx.branch.reason,
         options: question.options.map((option) => option.text),
         selected: state.answers[question.id],
-        stageLabel: `Ayırıcı · ${ctx.branch.title}`,
+        stageLabel:
+          lang === "en"
+            ? `Differential · ${ctx.branch.title}`
+            : `Ayırıcı · ${ctx.branch.title}`,
         questionId: question.id,
         skippable: false,
       };
@@ -280,6 +297,19 @@ export function ScanApp({ lang = "tr" }: { lang?: Lang }) {
           />
           {d.gate_check_crisis}
         </label>
+        <label className="check">
+          <input
+            type="checkbox"
+            checked={legalOk}
+            onChange={(event) => setLegalOk(event.target.checked)}
+          />
+          <span>
+            {d.gate_check_legal}{" "}
+            <a className="linkish" href={legalPath} target="_blank" rel="noreferrer">
+              {d.gate_legal_link}
+            </a>
+          </span>
+        </label>
         <p className="note">
           <a className="linkish" href={crisisPath}>
             {d.gate_crisis_link}
@@ -289,7 +319,7 @@ export function ScanApp({ lang = "tr" }: { lang?: Lang }) {
           <button
             className="btn"
             type="button"
-            disabled={!ageOk || !crisisOk}
+            disabled={!ageOk || !crisisOk || !legalOk}
             onClick={() => {
               const startedAt = new Date().toISOString();
               persist({
@@ -312,8 +342,8 @@ export function ScanApp({ lang = "tr" }: { lang?: Lang }) {
     return (
       <section className="sheet bridge">
         <p className="kicker">{d.scan_pause}</p>
-        <h1>{lang === "en" ? "Paused. Take your time." : "Kayıt durdu. İstediğiniz kadar kalın."}</h1>
-        <p className="lede">{lang === "en" ? "Your answers are saved. Take a breath." : "Cevaplarınız kayıtlı. İki dakika bakışlarınızı yumuşatın."}</p>
+        <h1>{lang === "en" ? "Paused — take your time." : "Duraklatıldı. Acele etmeyin."}</h1>
+        <p className="lede">{lang === "en" ? "Your answers are saved on this device." : "Cevaplarınız bu cihazda kayıtlı."}</p>
         <button className="btn" type="button" onClick={() => setPaused(false)}>
           {d.scan_resume}
         </button>
@@ -353,7 +383,7 @@ export function ScanApp({ lang = "tr" }: { lang?: Lang }) {
       return (
         <section className="sheet bridge">
           <p className="kicker">{d.bridge_kicker}</p>
-          <h1>{lang === "en" ? "Session hiccup" : "Oturum kesildi"}</h1>
+          <h1>{lang === "en" ? "Something interrupted the session" : "Oturum kesintiye uğradı"}</h1>
           <p className="lede">
             {lang === "en"
               ? "Your answers are saved. Continue the screening — it is not finished yet."
@@ -430,7 +460,7 @@ export function ScanApp({ lang = "tr" }: { lang?: Lang }) {
         <h1 className="q-title">{current.question}</h1>
         <p className="q-sub">{current.subtitle}</p>
         {current.skippable ? (
-          <p className="note">{lang === "en" ? "This item is sensitive. You can skip it — the score for that dimension will be incomplete, but there is no penalty." : "Bu madde hassas. Atlayabilirsiniz; skor o boyutta eksik kalır, ceza yazılmaz."}</p>
+          <p className="note">{lang === "en" ? "This question can be sensitive. You may skip it — that dimension’s score will be incomplete." : "Bu soru hassas olabilir. Atlayabilirsiniz; o boyutta skor eksik kalır."}</p>
         ) : null}
         <OptionList
           key={current.questionId}

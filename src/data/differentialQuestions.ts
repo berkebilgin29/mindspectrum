@@ -1,5 +1,5 @@
 /**
- * MindSpectrum - 2. ve 3. Aşama: Kapsamlı Ayırıcı Tanı ve Derinleşme Soru Kütüphanesi
+ * 9spectrum - 2. ve 3. Aşama: Kapsamlı Ayırıcı Tanı ve Derinleşme Soru Kütüphanesi
  * Örtüşen belirti kümelerini nörobiyolojik mekanizma, düşünce yapısı, çocukluk kökeni
  * ve tetikleyicilere göre ayıran senaryo temelli ayırıcı sorular.
  */

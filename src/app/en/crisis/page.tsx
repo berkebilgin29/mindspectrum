@@ -3,7 +3,7 @@ import { EN } from "@/lib/i18n/dict";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Crisis resources · MindSpectrum",
+  title: "Crisis resources · 9spectrum",
   robots: { index: true, follow: true },
   alternates: { canonical: "/en/crisis", languages: { tr: "/kriz" } },
 };

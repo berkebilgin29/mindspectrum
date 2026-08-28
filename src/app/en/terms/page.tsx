@@ -3,7 +3,7 @@ import { SITE_NAME } from "@/lib/site";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Terms of use · MindSpectrum",
+  title: "Terms of use · 9spectrum",
   alternates: { canonical: "/en/terms", languages: { tr: "/kullanim-sartlari" } },
 };
 

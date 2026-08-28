@@ -1,5 +1,6 @@
 import { SiteShell } from "@/components/Header";
 import { CONTACT_EMAIL, SITE_NAME } from "@/lib/site";
+import { TR } from "@/lib/i18n/dict";
 import type { Metadata } from "next";
 import Link from "next/link";
 
@@ -12,24 +13,19 @@ export default function IletisimPage() {
     <SiteShell>
       <main className="scales wrap">
         <article className="sheet report prose">
-          <p className="kicker">İletişim</p>
-          <h1>Yazın.</h1>
+          <p className="kicker">{TR.contact_kicker}</p>
+          <h1>{TR.contact_h1}</h1>
           <p className="lede">
-            Klinik acil durumlar için bu kutu kullanılmaz.{" "}
+            {TR.contact_lede}{" "}
             <Link href="/kriz">Kriz kaynakları</Link> sayfasına gidin.
           </p>
-          <p>
-            {SITE_NAME} ile ilgili soru, iş birliği veya düzeltme talepleri:
-          </p>
+          <p>{TR.contact_body.replace("9spectrum", SITE_NAME)}</p>
           <p>
             <a className="btn" href={`mailto:${CONTACT_EMAIL}`}>
               {CONTACT_EMAIL}
             </a>
           </p>
-          <p className="note">
-            E-postada tarama cevaplarınızı göndermeniz gerekmez. Gönderirseniz
-            o ileti sizin sorumluluğunuzdadır.
-          </p>
+          <p className="note">{TR.contact_note}</p>
         </article>
       </main>
     </SiteShell>

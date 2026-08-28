@@ -21,8 +21,8 @@ export const DIMENSION_META_EN: Record<
   },
   trauma_ptsd: { label: "Trauma / PTSD", short: "Trauma", group: "Trauma" },
   bpd_emotional: {
-    label: "Emotional dysregulation",
-    short: "Emotion",
+    label: "Emotion regulation",
+    short: "Emotion reg.",
     group: "Regulation",
   },
 };

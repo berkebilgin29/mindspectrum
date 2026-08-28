@@ -175,12 +175,12 @@ export function ChildScanApp({ lang = "tr" }: { lang?: Lang }) {
   if (state.phase === "intro") {
     return (
       <section className="sheet bridge">
-        <p className="kicker">Kapı · ebeveyn tarama</p>
-        <h1>Çocuk adına doldurulur. Tanı değildir.</h1>
+        <p className="kicker">Başlamadan önce · ebeveyn formu</p>
+        <h1>Bu formu ebeveyn veya bakıcı doldurur. Tanı değildir.</h1>
         <p className="lede">
-          6–17 yaş için ebeveyn / bakıcı formu. Çocuğun yanında, yargılamadan,
-          son birkaç haftayı düşünerek yanıtlayın. İstismar şüphesinde tarama
-          değil, 183 ve yetkili kurumlar.
+          6–17 yaş için ebeveyn / bakıcı formu. Son birkaç haftayı düşünerek,
+          yargılamadan yanıtlayın. İstismar şüphesinde tarama değil; 183 ve
+          yetkili kurumlara başvurun.
         </p>
         <label className="check">
           <input

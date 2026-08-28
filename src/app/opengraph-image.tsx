@@ -1,11 +1,16 @@
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
 import { ImageResponse } from "next/og";
 
-export const runtime = "edge";
-export const alt = "MindSpectrum — Çift aşamalı adaptif tarama";
+export const runtime = "nodejs";
+export const alt = "9spectrum — İki aşamalı psikolojik tarama";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-export default function OGImage() {
+export default async function OGImage() {
+  const logoData = await readFile(join(process.cwd(), "public", "logo.png"));
+  const logoSrc = `data:image/png;base64,${logoData.toString("base64")}`;
+
   return new ImageResponse(
     (
       <div
@@ -20,36 +25,28 @@ export default function OGImage() {
           fontFamily: "Georgia, serif",
         }}
       >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={logoSrc}
+          alt="9spectrum"
+          width={560}
+          height={132}
+          style={{ objectFit: "contain" }}
+        />
         <div
           style={{
-            display: "flex",
-            alignItems: "baseline",
-            gap: "4px",
-            fontSize: 72,
-            fontWeight: 600,
-            letterSpacing: "-0.02em",
-            color: "#1c2430",
-          }}
-        >
-          <span>Mind</span>
-          <span style={{ color: "#2f5f66", fontStyle: "italic", fontWeight: 500 }}>
-            Spectrum
-          </span>
-        </div>
-        <div
-          style={{
-            marginTop: 24,
+            marginTop: 28,
             fontSize: 28,
             color: "#4a5564",
             textAlign: "center",
-            maxWidth: 700,
+            maxWidth: 760,
           }}
         >
-          Çift aşamalı adaptif tarama · 9 psikolojik boyut
+          İki aşamalı psikolojik tarama · 9 boyut
         </div>
         <div
           style={{
-            marginTop: 16,
+            marginTop: 14,
             fontSize: 20,
             color: "#6d7886",
           }}

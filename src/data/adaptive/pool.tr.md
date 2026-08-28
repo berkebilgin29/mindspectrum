@@ -1,4 +1,4 @@
-# MindSpectrum — Aşama 1 Senaryo Havuzu ve Gizli Puanlama Matrisi
+# 9spectrum — Aşama 1 Senaryo Havuzu ve Gizli Puanlama Matrisi
 
 *Prototip 0.2 — 35 soruluk davranış katmanı (ADHD dışı) • İç kullanım / geliştirme notu*
 

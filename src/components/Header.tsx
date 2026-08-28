@@ -7,6 +7,7 @@ import { CONTACT_EMAIL, SITE_NAME } from "@/lib/site";
 import { DICTS, type Lang } from "@/lib/i18n/dict";
 import { TR_TO_EN, EN_TO_TR } from "@/lib/i18n/locale";
 import { usePathname } from "next/navigation";
+import { HtmlLang } from "@/components/HtmlLang";
 
 type NavKey =
   | "home"
@@ -75,7 +76,13 @@ export function Header({ current, lang = "tr" }: HeaderProps) {
   return (
     <header className="letterhead wrap">
       <Link className="brand" href={lang === "en" ? "/en" : "/"}>
-        Mind<span>Spectrum</span>
+        <img
+          className="brand-logo"
+          src="/logo.png"
+          alt={SITE_NAME}
+          width={180}
+          height={48}
+        />
       </Link>
       <button
         className="menu-toggle"
@@ -144,6 +151,7 @@ export function SiteShell({
 }) {
   return (
     <>
+      <HtmlLang lang={lang} />
       <a className="skip" href="#icerik">
         {lang === "en" ? "Skip to content" : "İçeriğe geç"}
       </a>

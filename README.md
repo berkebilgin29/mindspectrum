@@ -1,27 +1,19 @@
-# MindSpectrum
+# 9spectrum
 
-Tanı koymayan, çift aşamalı psikolojik tarama. Cevaplar kullanıcının tarayıcısında kalır.
+Tanı koymayan, iki aşamalı **adaptif** psikolojik tarama. Sabit soru listesi yoktur: cevaplara göre sistem sonuca yaklaşmak için soruları değiştirir. Dokuz boyutta eğilim profili; örtüşen belirtilerde ayırıcı sorular.
 
-## Yerel çalıştırma
+## Geliştirme
 
 ```bash
 npm install
 npm run dev
 ```
 
-Adres: http://127.0.0.1:3000
+## Ortam değişkenleri
 
-## Yayına alma
-
-1. Bu klasörü GitHub’a itin.
-2. [Vercel](https://vercel.com) ile projeyi bağlayın.
-3. Ortam değişkenlerini ayarlayın:
+`.env.example` dosyasına bakın:
 
 ```
-NEXT_PUBLIC_SITE_URL=https://sizin-alan-adiniz.com
-NEXT_PUBLIC_CONTACT_EMAIL=merhaba@sizin-alan-adiniz.com
+NEXT_PUBLIC_SITE_URL=https://9spectrum.com
+NEXT_PUBLIC_CONTACT_EMAIL=merhaba@9spectrum.com
 ```
-
-4. Deploy edin.
-
-`npm run build` üretim derlemesini doğrular.

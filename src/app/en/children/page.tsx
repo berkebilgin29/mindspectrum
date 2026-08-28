@@ -1,24 +1,24 @@
 import { SiteShell } from "@/components/Header";
+import { pageMetadata } from "@/lib/seo";
 import Link from "next/link";
 import type { Metadata } from "next";
 
-export const metadata: Metadata = {
-  title: "Child screening (parent form) · MindSpectrum",
+export const metadata: Metadata = pageMetadata({
+  lang: "en",
+  title: "Child screening (parent form)",
   description:
-    "Parent-reported screening for child ADHD, autism/sensory profile, anxiety, OCD, and mood symptoms. Not a diagnosis. Ages 6–17.",
+    "Parent-reported screening for child ADHD, autism/sensory profile, anxiety, OCD, and mood symptoms. Not a diagnosis. Ages 6–17. Answers stay on your device.",
+  trPath: "/cocuklar",
+  enPath: "/en/children",
   keywords: [
     "child ADHD screening",
     "autism symptoms parent",
     "child anxiety screening",
     "childhood OCD",
     "parent questionnaire",
+    "9spectrum",
   ],
-  alternates: { canonical: "/en/children", languages: { tr: "/cocuklar" } },
-  openGraph: {
-    title: "Child screening (parent form) · MindSpectrum",
-    description: "Non-diagnostic parent form. School, sensory load, anxiety, and overlapping symptoms.",
-  },
-};
+});
 
 export default function EnChildrenPage() {
   return (
@@ -26,20 +26,29 @@ export default function EnChildrenPage() {
       <main className="home wrap">
         <section className="sheet intake">
           <div className="meta-row">
-            <span>Form <b>MS-C01</b></span>
-            <span>Age <b>6–17</b></span>
-            <span>Completed by <b>parent / caregiver</b></span>
-            <span>Duration <b>10–16 min</b></span>
+            <span>
+              Form <b>MS-C01</b>
+            </span>
+            <span>
+              Age <b>6–17</b>
+            </span>
+            <span>
+              Completed by <b>parent / caregiver</b>
+            </span>
+            <span>
+              Duration <b>10–16 min</b>
+            </span>
           </div>
           <h1 className="display intake-title">
-            Your child's symptoms overlap. Let's map them.
+            Your child&apos;s symptoms may overlap. Let&apos;s map them
+            together.
           </h1>
           <p className="lede">
             This is not an official test or diagnosis for children. It is a
-            parent-reported triage based on observations from the past few weeks:
-            ADHD-like executive difficulty, autism/sensory load, anxiety, OCD
-            repetitions, low mood, and emotional storms. If overlapping patterns
-            appear, differential questions are opened.
+            parent-reported pre-screen based on recent observations: ADHD-like
+            difficulties, autism / sensory load, anxiety, OCD repetitions, low
+            mood, and emotion regulation. If overlapping patterns appear,
+            differential questions open.
           </p>
           <div className="intake-actions">
             <Link className="btn" href="/en/children/scan">
@@ -54,8 +63,8 @@ export default function EnChildrenPage() {
           <div>
             <h2>Why a separate form?</h2>
             <p className="lede" style={{ marginTop: 12 }}>
-              Adult items use work, masking, and hypomania language. Child items
-              are translated to school, play, routine, and parent observation.
+              Adult items use work, masking, and hypomania language. The child
+              form uses school, play, routine, and caregiver observation.
               Bipolar screening is cautious; it rarely presents prominently in
               young children.
             </p>
@@ -63,22 +72,27 @@ export default function EnChildrenPage() {
           <div>
             <div className="step">
               <strong>ADHD-like picture</strong>
-              Difficulty starting, fidgeting, missing instructions, can't wait for turn.
+              Trouble starting, fidgeting, missing instructions, difficulty
+              waiting turns.
             </div>
             <div className="step">
               <strong>Autism / sensory</strong>
-              Sound-light-texture, repetitive play, reading implied meaning, meltdowns when plans change.
+              Sound–light–fabric sensitivity, repetitive play, reading implied
+              meaning, distress when plans change.
             </div>
             <div className="step">
               <strong>Anxiety and OCD</strong>
-              Catastrophic questions, morning somatic complaints before school, washing/ordering rituals.
+              Catastrophic worries, morning bodily complaints before school,
+              washing or “just right” repetitions.
             </div>
           </div>
         </section>
         <p className="note">
-          For abuse, neglect or child safety: call emergency services. This
-          form's result does not replace a court or school evaluation.{" "}
-          <Link className="linkish" href="/en/disclaimer">Legal notice</Link>
+          For abuse, neglect, or child safety concerns, call emergency services.
+          This form does not replace a court or school evaluation.{" "}
+          <Link className="linkish" href="/en/disclaimer">
+            Legal notice
+          </Link>
         </p>
       </main>
     </SiteShell>

@@ -1,55 +1,35 @@
+import { JsonLd } from "@/components/JsonLd";
 import { SiteShell } from "@/components/Header";
-import type { Metadata } from "next";
+import { TR } from "@/lib/i18n/dict";
+import { faqPageJsonLd, pageMetadata } from "@/lib/seo";
 import Link from "next/link";
+import type { Metadata } from "next";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+  lang: "tr",
   title: "Sık sorulan sorular",
-};
-
-const FAQ = [
-  {
-    q: "Bu bir tanı mı?",
-    a: "Hayır. MindSpectrum eğilim ve örtüşme haritası üretir. Tanıyı yalnızca yetkili bir klinisyen koyabilir.",
-  },
-  {
-    q: "Cevaplarım nereye gidiyor?",
-    a: "Sunucuya gitmiyor. Bu tarayıcının yerel belleğinde kalır. İstediğiniz zaman gizlilik sayfasından silebilirsiniz.",
-  },
-  {
-    q: "Ne kadar sürer?",
-    a: "Yazılı çatı yaklaşık 36 maddedir; çoğu kişi 12–20 dakikada bitirir. Çocuk ebeveyn formu daha kısadır.",
-  },
-  {
-    q: "Çocuklar için form var mı?",
-    a: "Evet. /cocuklar adresinde 6–17 yaş ebeveyn formu vardır. Çocuk tek başına doldurmaz; tanı veya okul raporu değildir.",
-  },
-  {
-    q: "Görsel testler nedir?",
-    a: "Artık yok. Tarama yalnızca yazılı maddelerden oluşur; şıka tıklayınca otomatik ilerler.",
-  },
-  {
-    q: "Yarıda bırakırsam ne olur?",
-    a: "Aynı tarayıcıda kaldığınız yerden devam edebilirsiniz. Başka bir cihaza aktarılmaz.",
-  },
-  {
-    q: "Krizdeysem kullanmalı mıyım?",
-    a: "Hayır. Acil durumda 112’yi arayın. Kriz kaynakları sayfasına bakın.",
-  },
-  {
-    q: "Ölçekler resmi mi?",
-    a: "Hayır. Soru dili ASRS-v1.1, PHQ-9, GAD-7, OCI-R, MDQ, AQ-10, LSAS, PCL-5 ve benzeri envanterlerin boyutlarından türetilmiştir; telifli tam formlar uygulanmaz.",
-  },
-];
+  description:
+    "9spectrum tanı mı koyar? Cevaplar nereye gider? Ne kadar sürer? Çocuk formu var mı? Gizlilik, kriz ve ölçekler hakkında net yanıtlar.",
+  trPath: "/sss",
+  enPath: "/en/faq",
+  keywords: [
+    "psikolojik tarama SSS",
+    "DEHB tarama güvenli mi",
+    "ücretsiz psikolojik test gizlilik",
+    "9spectrum",
+  ],
+});
 
 export default function SssPage() {
   return (
     <SiteShell current="sss">
+      <JsonLd data={faqPageJsonLd(TR.faq_items)} />
       <main className="scales wrap">
         <article className="sheet report">
-          <p className="kicker">SSS</p>
-          <h1>Sık sorulan sorular</h1>
+          <p className="kicker">{TR.faq_kicker}</p>
+          <h1>{TR.faq_h1}</h1>
           <dl className="faq">
-            {FAQ.map((item) => (
+            {TR.faq_items.map((item) => (
               <div key={item.q}>
                 <dt>{item.q}</dt>
                 <dd>{item.a}</dd>
@@ -57,13 +37,13 @@ export default function SssPage() {
             ))}
           </dl>
           <p className="note">
-            Daha fazla metin:{" "}
+            {TR.faq_more}{" "}
             <Link className="linkish" href="/yasal-uyari">
-              yasal uyarı
+              {TR.faq_legal_link}
             </Link>
             {" · "}
             <Link className="linkish" href="/gizlilik">
-              gizlilik
+              {TR.faq_privacy_link}
             </Link>
           </p>
         </article>

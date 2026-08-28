@@ -1,5 +1,5 @@
 /**
- * MindSpectrum - Klinik Durum Bilgi Bankası ve Örtüşme Rehberi
+ * 9spectrum - Klinik Durum Bilgi Bankası ve Örtüşme Rehberi
  * DSM-5-TR ve ICD-11 kriterleri referans alınarak yapılandırılmıştır.
  */
 
